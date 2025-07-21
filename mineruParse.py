@@ -1,9 +1,9 @@
-import copy
-import json
 import os
 from pathlib import Path
 from typing import List, Any
 import nest_asyncio
+from PIL import Image
+
 nest_asyncio.apply()
 
 from fastapi import FastAPI, Form, HTTPException
@@ -21,25 +21,32 @@ from mineru.backend.vlm.vlm_middle_json_mkcontent import union_make as vlm_union
 
 
 class MinerUParser:
-    def __init__(self, input_dir_name: str, model_source: str = "modelscope"):
+    def __init__(self, input_file_path: str, model_source: str = "modelscope"):
         # args
         self.output_dir_name = 'outputs'  # 只输出识别过程中产生的图片，保存在.\outputs\pdf_name\vlm(pipeline)\images里面
         self.file_name_list = None
 
         __dir__ = os.path.dirname(os.path.abspath(__file__))
-        pdf_files_dir = os.path.join(__dir__, input_dir_name)
+        # pdf_files_dir = os.path.join(__dir__, input_dir_name)
         # print(pdf_files_dir)
-        if not os.path.isdir(pdf_files_dir):
-            logger.error(f"输入目录不存在: {pdf_files_dir}")
-            raise FileNotFoundError(f"输入目录不存在: {pdf_files_dir}")
+        if not os.path.exists(input_file_path):
+            logger.error(f"输入文档不存在: {input_file_path}")
+            raise FileNotFoundError(f"输入文档不存在: {input_file_path}")
+
         self.output_dir = os.path.join(__dir__, self.output_dir_name)
+
         pdf_suffixes = [".pdf"]
         image_suffixes = [".png", ".jpeg", ".jpg"]
 
         self.doc_path_list = []
-        for doc_path in Path(pdf_files_dir).glob('*'):
-            if doc_path.suffix in pdf_suffixes + image_suffixes:
-                self.doc_path_list.append(doc_path)
+        if Path(input_file_path).is_file() and Path(input_file_path).suffix in pdf_suffixes + image_suffixes:
+            self.doc_path_list.append(Path(input_file_path))
+        elif Path(input_file_path).is_dir():
+            logger.info(f"{input_file_path}是一个文件夹，不是文档。")
+        else:
+            logger.info(f"{input_file_path} 不是一个PDF或图像文件。")
+
+        print(self.doc_path_list)
 
         """如果您由于网络问题无法下载模型，可以设置环境变量MINERU_MODEL_SOURCE为modelscope使用免代理仓库下载模型"""
         os.environ['MINERU_MODEL_SOURCE'] = model_source
@@ -255,22 +262,59 @@ class MinerUParser:
 
 # --- FastAPI 应用 ---
 app = FastAPI()
+
+
+def is_supported_file(file_path: str) -> bool:
+    # 定义支持的文件扩展名
+    supported_extensions = ('.pdf', '.jpg', '.jpeg', '.png', '.gif', '.bmp')
+
+    # 检查文件扩展名
+    if not file_path.lower().endswith(supported_extensions):
+        return False
+
+    # 如果是图片，进一步检查文件内容是否有效
+    if file_path.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp')):
+        try:
+            with Image.open(file_path) as img:
+                img.verify()  # 验证文件是否为有效图片
+        except (IOError, SyntaxError, FileNotFoundError):
+            return False
+
+    return True
+
+
 @app.post("/process/")
-async def process_documents(input_dir: str = Form(...), backend: str = Form(...)):
+async def process_documents(input_file_path: str = Form(...), backend: str = Form(...)):
     try:
-        parser = MinerUParser(input_dir_name=input_dir)
+        # 检查输入路径是否存在
+        if not os.path.exists(input_file_path):
+            raise HTTPException(status_code=400, detail="Input file does not exist.")
+
+        # 检查是否为文件
+        if not os.path.isfile(input_file_path):
+            raise HTTPException(status_code=400, detail="Input path is not a file.")
+
+        # 检查文件类型是否支持
+        if not is_supported_file(input_file_path):
+            raise HTTPException(status_code=400, detail="Unsupported file type.")
+
+        # 如果通过了所有检查，继续处理
+        parser = MinerUParser(input_file_path=input_file_path)
         """To enable VLM mode, change the backend to 'vlm-xxx'"""
         # parser.parse_doc(path_list=parser.doc_path_list, backend="vlm-transformers", server_url="http://192.168.143.117:30000")  # more general.
         # parser.parse_doc(path_list=parser.doc_path_list, backend="vlm-sglang-engine", server_url="http://192.168.143.117:30000")  # faster(engine).
         result = parser.parse_doc(path_list=parser.doc_path_list, backend=backend)  # faster(client).
         return result
+    except HTTPException as http_exc:
+        # 如果前面已经抛出HTTPException，直接重新抛出（保持400）
+        raise http_exc
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 # Example usage:
 if __name__ == "__main__":
-    # parser = MinerUParser(input_dir_name='inputs')
+    # parser = MinerUParser(input_file_path=r"E:\IT\信息系统开发技术\web前端概述.pdf")
     # """To enable VLM mode, change the backend to 'vlm-xxx'"""
     # # parser.parse_doc(path_list=parser.doc_path_list, backend="vlm-transformers", server_url="http://192.168.143.117:30000")  # more general.
     # # parser.parse_doc(path_list=parser.doc_path_list, backend="vlm-sglang-engine", server_url="http://192.168.143.117:30000")  # faster(engine).
@@ -281,4 +325,3 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="127.0.0.1", port=8000)
-

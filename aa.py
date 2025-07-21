@@ -115,12 +115,12 @@ with_message_history = RunnableWithMessageHistory(
 # 调用带有历史会话记录的Runnable来执行任务 ， 其中我们需要传递本次会话需要的session_id值
 message1 = with_message_history.invoke(
     input={"ability":"数学",'language':'中文',"input":"正弦函数是什么意思"},
-    config={"configurable" : { 'user_id':'1',"session_id" : "session01" }}
+    config={"configurable" : { 'user_id':'1',"conversation_id" : "session01" }}
 )
 print(message1)
 message2 = with_message_history.invoke(
     input={"ability":"语文",'language':'中文', "input":"先输出上一次回答的内容，然后根据上一次的回答写诗"},
-    config={"configurable" : {  'user_id':'1', "session_id" : "session01" }}  # 成功
+    config={"configurable" : {  'user_id':'1', "conversation_id" : "session01" }}  # 成功
 )
 print(message2)
 # message3 = with_message_history.invoke(
@@ -177,3 +177,4 @@ print(message2)
 #     },
 #     config={'configurable': {'session_id': '001'}})
 # print(response2)
+

@@ -242,4 +242,4 @@ if __name__ == '__main__':
     """To enable VLM mode, change the backend to 'vlm-xxx'"""
     # parse_doc(doc_path_list, output_dir, backend="vlm-transformers")  # more general.
     # parse_doc(doc_path_list, output_dir, backend="vlm-sglang-engine")  # faster(engine).
-    parse_doc(doc_path_list, output_dir, backend="vlm-sglang-client", server_url="http://192.168.143.117:30000")  # faster(client).
+    parse_doc(doc_path_list, output_dir, backend="vlm-transformers", server_url="http://192.168.143.117:30000")  # faster(client).
