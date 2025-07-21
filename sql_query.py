@@ -3,7 +3,7 @@ from psycopg2 import sql
 from embedding import embedding, save_2_pgvector
 
 
-def query(question: str):
+def query(question: str, number=5):
     question_after_embedding = list(embedding([question]))[0][1]
     conn_params = {
         "host": "192.168.143.117",
@@ -20,15 +20,15 @@ def query(question: str):
                 SELECT content, embedding <-> %s::real[] as similarity
                 FROM embeddings_documents
                 ORDER BY embedding <-> %s::real[]
-                LIMIT 5;
+                LIMIT %s;
             """)
-            cur.execute(sql_query, (question_after_embedding, question_after_embedding))
+            cur.execute(sql_query, (question_after_embedding, question_after_embedding, number))
             results = cur.fetchall()
             # for row in results:
             #     print(row)
-            return results
+            return results  # 返回list[tuple[内容,similarity]]
 
 
 if __name__ == '__main__':
-    question = "What is Task Decomposition?"
-    print(query(question))
+    question = "肺栓塞是什么？"
+    print(query(question, 2))

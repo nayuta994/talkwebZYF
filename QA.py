@@ -2,7 +2,6 @@ from llm import llm
 from sql_query import query
 
 
-
 if __name__ == '__main__':
     prompt = ''
     question = "我想了解一些关于使用ai解决肺栓塞问题相关的内容"
