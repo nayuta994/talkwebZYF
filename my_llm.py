@@ -1,8 +1,9 @@
 from typing import Any, Dict, Iterator, List, Mapping, Optional
 from langchain_core.callbacks.manager import CallbackManagerForLLMRun
 from langchain_core.language_models.llms import LLM
+
+from new_llm import NewLLM
 from langchain_core.outputs import GenerationChunk
-from llm import llm
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableWithMessageHistory, ConfigurableFieldSpec
@@ -40,8 +41,8 @@ class MyLLM(LLM):
 
     def _call_model_api(self, prompt: str, stop: List[str], **kwargs) -> str:
         # 这里调用实际的模型API
-        result = llm(question=prompt)
-        # 这是一个示例实现
+        my_model = NewLLM()
+        result = my_model.llm(question=prompt)
         return result
 
     def _stream(
@@ -66,7 +67,8 @@ class MyLLM(LLM):
         Returns:
             An iterator of GenerationChunks.
         """
-        result = llm(question=prompt)
+        my_model = NewLLM()
+        result = my_model.llm(question=prompt)
         for char in result:
             chunk = GenerationChunk(text=char)
             if run_manager:

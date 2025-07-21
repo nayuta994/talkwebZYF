@@ -1,6 +1,6 @@
 from llm import llm
 from sql_query import query
-from mineruParse import MinerUParser
+
 
 
 if __name__ == '__main__':
@@ -8,6 +8,7 @@ if __name__ == '__main__':
     question = "我想了解一些关于使用ai解决肺栓塞问题相关的内容"
 
     # 加入解析pdf功能
+    # from mineruParse import MinerUParser
     # parser = MinerUParser(input_dir_name='input', output_dir_name="outputs")
     # """To enable VLM mode, change the backend to 'vlm-xxx'"""
     # # parser.parse_doc(path_list=parser.doc_path_list, backend="vlm-transformers")  # more general.
