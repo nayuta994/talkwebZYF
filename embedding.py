@@ -57,7 +57,7 @@ def save_2_pgvector(data):
     conn_params = {
         "host": "192.168.143.117",
         "port": "9002",
-        "database": "pgvector",
+        "database": "knowledge_database",
         "user": "postgres",
         "password": "123456"
     }

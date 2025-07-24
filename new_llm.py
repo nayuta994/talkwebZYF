@@ -14,7 +14,7 @@ logger = logger()
 class NewLLM:
     def __init__(self):
         self.llm_answer: str = ''
-        self.response: dict = None
+        self.response: dict = {}
 
     def _store_to_database(self, user_message: str, llm_message: str, user_id: str) -> None:
         """
@@ -64,7 +64,7 @@ class NewLLM:
         except Exception as e:
             logger.info(f"[ERROR] An error occurred: {e}")  # 打印错误日志
 
-    def _stream_response(self, response: list[str]) -> Generator[str]:
+    def _stream_response(self, response: list[str]) -> Generator[str, None, None]:
         """
         流式处理LLM的响应，逐块生成内容。
         参数:
@@ -93,8 +93,8 @@ class NewLLM:
                 except json.JSONDecodeError:
                     continue  # 忽略无法解析的片段
 
-    def llm(self, question: str, user_id: str = '', prompt: str = '', need2store: bool = False,
-            temperature: float = 0.3, top_p: float = 0.4, stream: bool = False) -> Generator[str] | str:
+    def llm(self, question: str, user_id: str = '', prompt: str = '', need2store: bool = True,
+            temperature: float = 0.3, top_p: float = 0.4, stream: bool = False) -> Generator[str, None, None] | str:
         """
                 调用LLM服务获取回复，并可选择存储对话历史。
                 参数:
@@ -136,6 +136,14 @@ class NewLLM:
             # 发送请求到LLM服务
             response = requests.post(url, headers=headers, data=json.dumps(data), stream=stream)
             response.raise_for_status()  # 检查 HTTP 错误
+
+            # re截取用户输入部分
+            try:
+                question = re.search(r'## 【用户当前问题】\s*用户现在的问题是：\s*(?P<question>.*?)\s*【回答要求】',
+                                     question, re.DOTALL).group('question')
+            except AttributeError:
+                pass
+
             if not stream:
                 # 非流式处理
                 resp_json = response.json()
@@ -145,7 +153,8 @@ class NewLLM:
                     user_id = resp_json['id']
 
                 user_message = question
-                llm_message = re.match('<think>.*?</think>(?P<answer>.*)', resp, re.S).group('answer')  # 正则剔除思考内容
+                # re剔除思考内容
+                llm_message = re.match('<think>.*?</think>(?P<answer>.*)', resp, re.S).group('answer')
                 self.llm_answer = llm_message
                 resp_json['user_message'] = user_message
                 self.response = resp_json
@@ -218,7 +227,7 @@ class NewLLM:
 
 if __name__ == '__main__':
     llm = NewLLM()
-    resp = llm.llm('介绍一下毛主席', stream=True, need2store=True)
+    resp = llm.llm('我是谁啊', 'chatcmpl-dbb9df84524d44a6b4dac92235a922ac', stream=True, need2store=True)
     for i in resp:
         print(i, end='')
     print(llm.response)

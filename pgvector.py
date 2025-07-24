@@ -21,7 +21,7 @@ def connect_to_pgvector(host, port, database, user, password):
 data = {
     'host': "192.168.143.117",
     'port': "9002",
-    'database': "postgres",
+    'database': "knowledge_database",
     'user': "postgres",
     'password': "123456"
 }

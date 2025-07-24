@@ -1,16 +1,11 @@
-import json
-import os
-from pathlib import Path
 from typing import List, Tuple, Dict, Any
 
 from fastapi import FastAPI, Form, HTTPException
+import nest_asyncio
 
 from docs_reader2split import split_tool
 from embedding import embedding, save_2_pgvector
-from mineru.cli.common import prepare_env
-
 from mineruParse import MinerUParser
-import nest_asyncio
 
 nest_asyncio.apply()
 

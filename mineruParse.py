@@ -266,14 +266,14 @@ app = FastAPI()
 
 def is_supported_file(file_path: str) -> bool:
     # 定义支持的文件扩展名
-    supported_extensions = ('.pdf', '.jpg', '.jpeg', '.png', '.gif', '.bmp')
+    supported_extensions = ('.pdf', '.jpg', '.jpeg', '.png')
 
     # 检查文件扩展名
     if not file_path.lower().endswith(supported_extensions):
         return False
 
     # 如果是图片，进一步检查文件内容是否有效
-    if file_path.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp')):
+    if file_path.lower().endswith(('.jpg', '.jpeg', '.png', )):
         try:
             with Image.open(file_path) as img:
                 img.verify()  # 验证文件是否为有效图片

@@ -1,5 +1,5 @@
 from langchain_community.chat_models import ChatZhipuAI
-from langchain_core.chat_history import BaseChatMessageHistory
+from langchain_core.chat_history import BaseChatMessageHistory, InMemoryChatMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableWithMessageHistory, ConfigurableFieldSpec
 from langchain_openai import ChatOpenAI
@@ -123,6 +123,19 @@ message2 = with_message_history.invoke(
     config={"configurable" : {  'user_id':'1', "conversation_id" : "session01" }}  # 成功
 )
 print(message2)
+print(store)
+'''
+{ ('1', 'session01'): InMemoryChatMessageHistory(
+                                                messages=[ HumanMessage(content='正弦函数是什么意思', additional_kwargs={}, response_metadata={}), 
+                                                AIMessage(content='正弦函数是一种数学函数，描述一个角度与直角三角形对边长度与斜边长度比例的关系。', additional_kwargs={}, response_metadata={}), 
+                                                HumanMessage(content='先输出上一次回答的内容，然后根据上一次的回答写诗', additional_kwargs={}, response_metadata={}), 
+                                                AIMessage(content='正弦函数是一种数学函数，描述一个角度与直角三角形对边长度与斜边长度比例的关系。\n\n正弦波荡，角度翩翩，\n三角函数，斜边比例间。', additional_kwargs={}, response_metadata={})
+                                                    ]
+                                                )
+                                            }
+'''   # InMemoryChatMessageHistory继承BaseChatMessageHistory
+
+
 # message3 = with_message_history.invoke(
 #     input={"ability":"语文","question":"先输出上一次回答的内容，然后根据上一次的回答写诗"},
 #     config={"configurable" : { "session_id" : "session03" }}  # 没有保留之前的会话（id）
