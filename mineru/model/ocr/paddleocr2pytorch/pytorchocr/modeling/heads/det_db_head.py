@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from ..common import Activation
 from ..backbones.det_mobilenet_v3 import ConvBNLayer
 
+
 class Head(nn.Module):
     def __init__(self, in_channels, **kwargs):
         super(Head, self).__init__()
@@ -67,8 +68,8 @@ class DBHead(nn.Module):
             'conv2d_57', 'batch_norm_49', 'conv2d_transpose_2', 'batch_norm_50',
             'conv2d_transpose_3', 'thresh'
         ]
-        self.binarize = Head(in_channels, **kwargs)# binarize_name_list)
-        self.thresh = Head(in_channels, **kwargs)#thresh_name_list)
+        self.binarize = Head(in_channels, **kwargs)  # binarize_name_list)
+        self.thresh = Head(in_channels, **kwargs)  # thresh_name_list)
 
     def step_function(self, x, y):
         return torch.reciprocal(1 + torch.exp(-self.k * (x - y)))
@@ -89,6 +90,7 @@ class LocalModule(nn.Module):
         # last Conv
         out = self.last_1(self.last_3(outf))
         return out
+
 
 class PFHeadLocal(DBHead):
     def __init__(self, in_channels, k=50, mode='small', **kwargs):

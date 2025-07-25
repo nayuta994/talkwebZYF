@@ -285,6 +285,9 @@ def is_supported_file(file_path: str) -> bool:
 
 @app.post("/process/")
 async def process_documents(input_file_path: str = Form(...), backend: str = Form(...)):
+    """
+    解析文档内容
+    """
     try:
         # 检查输入路径是否存在
         if not os.path.exists(input_file_path):

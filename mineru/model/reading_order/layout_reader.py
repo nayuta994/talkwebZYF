@@ -47,7 +47,7 @@ class DataCollator:
             labels[i] = labels[i] + [-100] * (max_len - len(labels[i]))
             input_ids[i] = input_ids[i] + [EOS_TOKEN_ID] * (max_len - len(input_ids[i]))
             attention_mask[i] = attention_mask[i] + [0] * (
-                max_len - len(attention_mask[i])
+                    max_len - len(attention_mask[i])
             )
 
         ret = {
@@ -75,7 +75,7 @@ def boxes2inputs(boxes: List[List[int]]) -> Dict[str, torch.Tensor]:
 
 
 def prepare_inputs(
-    inputs: Dict[str, torch.Tensor], model: LayoutLMv3ForTokenClassification
+        inputs: Dict[str, torch.Tensor], model: LayoutLMv3ForTokenClassification
 ) -> Dict[str, torch.Tensor]:
     ret = {}
     for k, v in inputs.items():
@@ -94,7 +94,7 @@ def parse_logits(logits: torch.Tensor, length: int) -> List[int]:
     :param length: input length
     :return: orders
     """
-    logits = logits[1 : length + 1, :length]
+    logits = logits[1: length + 1, :length]
     orders = logits.argsort(descending=False).tolist()
     ret = [o.pop() for o in orders]
     while True:

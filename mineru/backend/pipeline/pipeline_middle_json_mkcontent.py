@@ -21,9 +21,9 @@ def __is_hyphen_at_line_end(line):
 
 
 def make_blocks_to_markdown(paras_of_layout,
-                                      mode,
-                                      img_buket_path='',
-                                      ):
+                            mode,
+                            img_buket_path='',
+                            ):
     page_markdown = []
     for para_block in paras_of_layout:
         para_text = ''
@@ -121,6 +121,7 @@ def full_to_half(text: str) -> str:
             result.append(char)
     return ''.join(result)
 
+
 latex_delimiters_config = get_latex_delimiter_config()
 
 default_delimiters = {
@@ -134,6 +135,7 @@ display_left_delimiter = delimiters['display']['left']
 display_right_delimiter = delimiters['display']['right']
 inline_left_delimiter = delimiters['inline']['left']
 inline_right_delimiter = delimiters['inline']['right']
+
 
 def merge_para_with_text(para_block):
     block_text = ''
@@ -168,7 +170,7 @@ def merge_para_with_text(para_block):
             if content:
                 langs = ['zh', 'ja', 'ko']
                 # logger.info(f'block_lang: {block_lang}, content: {content}')
-                if block_lang in langs: # 中文/日语/韩文语境下，换行不需要空格分隔,但是如果是行内公式结尾，还是要加空格
+                if block_lang in langs:  # 中文/日语/韩文语境下，换行不需要空格分隔,但是如果是行内公式结尾，还是要加空格
                     if j == len(line['spans']) - 1 and span_type not in [ContentType.INLINE_EQUATION]:
                         para_text += content
                     else:
@@ -176,7 +178,8 @@ def merge_para_with_text(para_block):
                 else:
                     if span_type in [ContentType.TEXT, ContentType.INLINE_EQUATION]:
                         # 如果span是line的最后一个且末尾带有-连字符，那么末尾不应该加空格,同时应该把-删除
-                        if j == len(line['spans'])-1 and span_type == ContentType.TEXT and __is_hyphen_at_line_end(content):
+                        if j == len(line['spans']) - 1 and span_type == ContentType.TEXT and __is_hyphen_at_line_end(
+                                content):
                             para_text += content[:-1]
                         else:  # 西方文本语境下 content间需要空格分隔
                             para_text += f'{content} '
@@ -215,7 +218,8 @@ def make_blocks_to_content_list(para_block, img_buket_path, page_idx):
             para_content['text'] = merge_para_with_text(para_block)
             para_content['text_format'] = 'latex'
     elif para_type == BlockType.IMAGE:
-        para_content = {'type': ContentType.IMAGE, 'img_path': '', BlockType.IMAGE_CAPTION: [], BlockType.IMAGE_FOOTNOTE: []}
+        para_content = {'type': ContentType.IMAGE, 'img_path': '', BlockType.IMAGE_CAPTION: [],
+                        BlockType.IMAGE_FOOTNOTE: []}
         for block in para_block['blocks']:
             if block['type'] == BlockType.IMAGE_BODY:
                 for line in block['lines']:
@@ -228,7 +232,8 @@ def make_blocks_to_content_list(para_block, img_buket_path, page_idx):
             if block['type'] == BlockType.IMAGE_FOOTNOTE:
                 para_content[BlockType.IMAGE_FOOTNOTE].append(merge_para_with_text(block))
     elif para_type == BlockType.TABLE:
-        para_content = {'type': ContentType.TABLE, 'img_path': '', BlockType.TABLE_CAPTION: [], BlockType.TABLE_FOOTNOTE: []}
+        para_content = {'type': ContentType.TABLE, 'img_path': '', BlockType.TABLE_CAPTION: [],
+                        BlockType.TABLE_FOOTNOTE: []}
         for block in para_block['blocks']:
             if block['type'] == BlockType.TABLE_BODY:
                 for line in block['lines']:

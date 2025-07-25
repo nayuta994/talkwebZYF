@@ -5,7 +5,7 @@ from torch import nn
 
 class ConvBNAct(nn.Module):
     def __init__(
-        self, in_channels, out_channels, kernel_size, stride, groups=1, use_act=True
+            self, in_channels, out_channels, kernel_size, stride, groups=1, use_act=True
     ):
         super().__init__()
         self.use_act = use_act
@@ -53,12 +53,12 @@ class ESEModule(nn.Module):
 
 class HG_Block(nn.Module):
     def __init__(
-        self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        layer_num,
-        identity=False,
+            self,
+            in_channels,
+            mid_channels,
+            out_channels,
+            layer_num,
+            identity=False,
     ):
         super().__init__()
         self.identity = identity
@@ -109,14 +109,14 @@ class HG_Block(nn.Module):
 
 class HG_Stage(nn.Module):
     def __init__(
-        self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        block_num,
-        layer_num,
-        downsample=True,
-        stride=[2, 1],
+            self,
+            in_channels,
+            mid_channels,
+            out_channels,
+            block_num,
+            layer_num,
+            downsample=True,
+            stride=[2, 1],
     ):
         super().__init__()
         self.downsample = downsample
@@ -165,13 +165,13 @@ class PPHGNet(nn.Module):
     """
 
     def __init__(
-        self,
-        stem_channels,
-        stage_config,
-        layer_num,
-        in_channels=3,
-        det=False,
-        out_indices=None,
+            self,
+            stem_channels,
+            stage_config,
+            layer_num,
+            in_channels=3,
+            det=False,
+            out_indices=None,
     ):
         super().__init__()
         self.det = det

@@ -5,7 +5,6 @@ import numpy as np
 import cv2
 import argparse
 
-
 root_dir = Path(__file__).resolve().parent.parent.parent
 DEFAULT_CFG_PATH = root_dir / "pytorchocr" / "utils" / "resources" / "arch_config.yaml"
 
@@ -81,7 +80,8 @@ def init_args():
 
     parser.add_argument(
         "--vis_font_path", type=str,
-        default=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'doc/fonts/simfang.ttf'))
+        default=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                             'doc/fonts/simfang.ttf'))
     parser.add_argument(
         "--rec_char_dict_path",
         type=str,
@@ -139,9 +139,11 @@ def init_args():
 
     return parser
 
+
 def parse_args():
     parser = init_args()
     return parser.parse_args()
+
 
 def get_default_config(args):
     return vars(args)
@@ -162,6 +164,7 @@ def read_network_config_from_yaml(yaml_path, char_num=None):
             'NRTRLabelDecode': char_num + 3
         }
     return res['Architecture']
+
 
 def AnalysisConfig(weights_path, yaml_path=None, char_num=None):
     if not os.path.exists(os.path.abspath(weights_path)):

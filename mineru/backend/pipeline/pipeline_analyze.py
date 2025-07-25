@@ -10,9 +10,9 @@ from ...utils.pdf_classify import classify
 from ...utils.pdf_image_tools import load_images_from_pdf
 from ...utils.model_utils import get_vram, clean_memory
 
-
 os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'  # 让mps可以fallback
 os.environ['NO_ALBUMENTATIONS_UPDATE'] = '1'  # 禁止albumentations检查更新
+
 
 class ModelSingleton:
     _instance = None
@@ -24,10 +24,10 @@ class ModelSingleton:
         return cls._instance
 
     def get_model(
-        self,
-        lang=None,
-        formula_enable=None,
-        table_enable=None,
+            self,
+            lang=None,
+            formula_enable=None,
+            table_enable=None,
     ):
         key = (lang, formula_enable, table_enable)
         if key not in self._models:
@@ -40,9 +40,9 @@ class ModelSingleton:
 
 
 def custom_model_init(
-    lang=None,
-    formula_enable=True,
-    table_enable=True,
+        lang=None,
+        formula_enable=True,
+        table_enable=True,
 ):
     model_init_start = time.time()
     # 从配置文件读取model-dir和device

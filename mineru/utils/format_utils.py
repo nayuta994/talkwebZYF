@@ -1,4 +1,3 @@
-
 import re
 import itertools
 import html
@@ -8,6 +7,7 @@ from pydantic import (
     computed_field,
     model_validator,
 )
+
 
 class TableCell(BaseModel):
     """TableCell."""
@@ -150,8 +150,8 @@ def otsl_parse_texts(texts, tokens):
                 new_texts.append(token)
                 if text_idx < len(texts) and texts[text_idx] == token:
                     text_idx += 1
-                    if (text_idx < len(texts) and 
-                        texts[text_idx] not in [OTSL_NL, OTSL_FCEL, OTSL_ECEL, OTSL_LCEL, OTSL_UCEL, OTSL_XCEL]):
+                    if (text_idx < len(texts) and
+                            texts[text_idx] not in [OTSL_NL, OTSL_FCEL, OTSL_ECEL, OTSL_LCEL, OTSL_UCEL, OTSL_XCEL]):
                         new_texts.append(texts[text_idx])
                         text_idx += 1
 

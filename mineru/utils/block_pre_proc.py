@@ -32,18 +32,18 @@ def process_groups(groups, body_key, caption_key, footnote_key):
 
 
 def prepare_block_bboxes(
-    img_body_blocks,
-    img_caption_blocks,
-    img_footnote_blocks,
-    table_body_blocks,
-    table_caption_blocks,
-    table_footnote_blocks,
-    discarded_blocks,
-    text_blocks,
-    title_blocks,
-    interline_equation_blocks,
-    page_w,
-    page_h,
+        img_body_blocks,
+        img_caption_blocks,
+        img_footnote_blocks,
+        table_body_blocks,
+        table_caption_blocks,
+        table_footnote_blocks,
+        discarded_blocks,
+        text_blocks,
+        title_blocks,
+        interline_equation_blocks,
+        page_w,
+        page_h,
 ):
     all_bboxes = []
 
@@ -92,7 +92,7 @@ def prepare_block_bboxes(
     all_discarded_blocks = remove_overlaps_min_blocks(all_discarded_blocks)
 
     """粗排序后返回"""
-    all_bboxes.sort(key=lambda x: x[0]+x[1])
+    all_bboxes.sort(key=lambda x: x[0] + x[1])
     return all_bboxes, all_discarded_blocks, footnote_blocks
 
 
@@ -107,7 +107,8 @@ def add_bboxes(blocks, block_type, bboxes):
             BlockType.TABLE_CAPTION,
             BlockType.TABLE_FOOTNOTE,
         ]:
-            bboxes.append([x0, y0, x1, y1, None, None, None, block_type, None, None, None, None, block['score'], block['group_id']])
+            bboxes.append([x0, y0, x1, y1, None, None, None, block_type, None, None, None, None, block['score'],
+                           block['group_id']])
         else:
             bboxes.append([x0, y0, x1, y1, None, None, None, block_type, None, None, None, None, block['score']])
 
@@ -146,10 +147,10 @@ def remove_need_drop_blocks(all_bboxes, discarded_blocks):
         for discarded_block in discarded_blocks:
             block_bbox = block[:4]
             if (
-                calculate_overlap_area_in_bbox1_area_ratio(
-                    block_bbox, discarded_block['bbox']
-                )
-                > 0.6
+                    calculate_overlap_area_in_bbox1_area_ratio(
+                        block_bbox, discarded_block['bbox']
+                    )
+                    > 0.6
             ):
                 if block not in need_remove:
                     need_remove.append(block)
@@ -197,11 +198,11 @@ def find_blocks_under_footnote(all_bboxes, footnote_blocks):
             footnote_x0, footnote_y0, footnote_x1, footnote_y1 = footnote_bbox
             # 如果footnote的纵向投影覆盖了block的纵向投影的80%且block的y0大于等于footnote的y1
             if (
-                block_y0 >= footnote_y1
-                and calculate_vertical_projection_overlap_ratio(
-                    (block_x0, block_y0, block_x1, block_y1), footnote_bbox
-                )
-                >= 0.8
+                    block_y0 >= footnote_y1
+                    and calculate_vertical_projection_overlap_ratio(
+                (block_x0, block_y0, block_x1, block_y1), footnote_bbox
+            )
+                    >= 0.8
             ):
                 if block not in need_remove_blocks:
                     need_remove_blocks.append(block)

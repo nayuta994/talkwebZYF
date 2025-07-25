@@ -12,16 +12,16 @@ def hard_swish(x, inplace=True):
 
 class DSConv(nn.Module):
     def __init__(
-        self,
-        in_channels,
-        out_channels,
-        kernel_size,
-        padding,
-        stride=1,
-        groups=None,
-        if_act=True,
-        act="relu",
-        **kwargs
+            self,
+            in_channels,
+            out_channels,
+            kernel_size,
+            padding,
+            stride=1,
+            groups=None,
+            if_act=True,
+            act="relu",
+            **kwargs
     ):
         super(DSConv, self).__init__()
         if groups == None:
@@ -452,5 +452,5 @@ class ASFBlock(nn.Module):
 
         out_list = []
         for i in range(self.out_features_num):
-            out_list.append(attention_scores[:, i : i + 1] * features_list[i])
+            out_list.append(attention_scores[:, i: i + 1] * features_list[i])
         return torch.cat(out_list, dim=1)

@@ -3,7 +3,6 @@ import os
 from mineru.utils.config_reader import get_latex_delimiter_config, get_formula_enable, get_table_enable
 from mineru.utils.enum_class import MakeMode, BlockType, ContentType
 
-
 latex_delimiters_config = get_latex_delimiter_config()
 
 default_delimiters = {
@@ -17,6 +16,7 @@ display_left_delimiter = delimiters['display']['left']
 display_right_delimiter = delimiters['display']['right']
 inline_left_delimiter = delimiters['inline']['left']
 inline_right_delimiter = delimiters['inline']['right']
+
 
 def merge_para_with_text(para_block, formula_enable=True, img_buket_path=''):
     para_text = ''
@@ -44,6 +44,7 @@ def merge_para_with_text(para_block, formula_enable=True, img_buket_path=''):
                 elif span_type == ContentType.INTERLINE_EQUATION:
                     para_text += content
     return para_text
+
 
 def mk_blocks_to_markdown(para_blocks, make_mode, formula_enable, table_enable, img_buket_path=''):
     page_markdown = []
@@ -122,9 +123,6 @@ def mk_blocks_to_markdown(para_blocks, make_mode, formula_enable, table_enable, 
     return page_markdown
 
 
-
-
-
 def make_blocks_to_content_list(para_block, img_buket_path, page_idx):
     para_type = para_block['type']
     para_content = {}
@@ -148,7 +146,8 @@ def make_blocks_to_content_list(para_block, img_buket_path, page_idx):
             'text_format': 'latex',
         }
     elif para_type == BlockType.IMAGE:
-        para_content = {'type': ContentType.IMAGE, 'img_path': '', BlockType.IMAGE_CAPTION: [], BlockType.IMAGE_FOOTNOTE: []}
+        para_content = {'type': ContentType.IMAGE, 'img_path': '', BlockType.IMAGE_CAPTION: [],
+                        BlockType.IMAGE_FOOTNOTE: []}
         for block in para_block['blocks']:
             if block['type'] == BlockType.IMAGE_BODY:
                 for line in block['lines']:
@@ -161,7 +160,8 @@ def make_blocks_to_content_list(para_block, img_buket_path, page_idx):
             if block['type'] == BlockType.IMAGE_FOOTNOTE:
                 para_content[BlockType.IMAGE_FOOTNOTE].append(merge_para_with_text(block))
     elif para_type == BlockType.TABLE:
-        para_content = {'type': ContentType.TABLE, 'img_path': '', BlockType.TABLE_CAPTION: [], BlockType.TABLE_FOOTNOTE: []}
+        para_content = {'type': ContentType.TABLE, 'img_path': '', BlockType.TABLE_CAPTION: [],
+                        BlockType.TABLE_FOOTNOTE: []}
         for block in para_block['blocks']:
             if block['type'] == BlockType.TABLE_BODY:
                 for line in block['lines']:
@@ -183,11 +183,11 @@ def make_blocks_to_content_list(para_block, img_buket_path, page_idx):
 
     return para_content
 
+
 def union_make(pdf_info_dict: list,
                make_mode: str,
                img_buket_path: str = '',
                ):
-
     formula_enable = get_formula_enable(os.getenv('MINERU_VLM_FORMULA_ENABLE', 'True').lower() == 'true')
     table_enable = get_table_enable(os.getenv('MINERU_VLM_TABLE_ENABLE', 'True').lower() == 'true')
 
@@ -198,7 +198,8 @@ def union_make(pdf_info_dict: list,
         if not paras_of_layout:
             continue
         if make_mode in [MakeMode.MM_MD, MakeMode.NLP_MD]:
-            page_markdown = mk_blocks_to_markdown(paras_of_layout, make_mode, formula_enable, table_enable, img_buket_path)
+            page_markdown = mk_blocks_to_markdown(paras_of_layout, make_mode, formula_enable, table_enable,
+                                                  img_buket_path)
             output_content.extend(page_markdown)
         elif make_mode == MakeMode.CONTENT_LIST:
             for para_block in paras_of_layout:

@@ -24,7 +24,8 @@ from mineru.version import __version__
 from mineru.utils.hash_utils import str_md5
 
 
-def page_model_info_to_page_info(page_model_info, image_dict, page, image_writer, page_index, ocr_enable=False, formula_enabled=True):
+def page_model_info_to_page_info(page_model_info, image_dict, page, image_writer, page_index, ocr_enable=False,
+                                 formula_enabled=True):
     scale = image_dict["scale"]
     page_pil_img = image_dict["img_pil"]
     page_img_md5 = str_md5(image_dict["img_base64"])
@@ -57,11 +58,13 @@ def page_model_info_to_page_info(page_model_info, image_dict, page, image_writer
         for block in maybe_text_image_blocks:
             span_in_block_list = []
             for span in spans:
-                if span['type'] == 'text' and calculate_overlap_area_in_bbox1_area_ratio(span['bbox'], block['bbox']) > 0.7:
+                if span['type'] == 'text' and calculate_overlap_area_in_bbox1_area_ratio(span['bbox'],
+                                                                                         block['bbox']) > 0.7:
                     span_in_block_list.append(span)
             if len(span_in_block_list) > 0:
                 # span_in_block_list中所有bbox的面积之和
-                spans_area = sum((span['bbox'][2] - span['bbox'][0]) * (span['bbox'][3] - span['bbox'][1]) for span in span_in_block_list)
+                spans_area = sum((span['bbox'][2] - span['bbox'][0]) * (span['bbox'][3] - span['bbox'][1]) for span in
+                                 span_in_block_list)
                 # 求ocr_res_area和res的面积的比值
                 block_area = (block['bbox'][2] - block['bbox'][0]) * (block['bbox'][3] - block['bbox'][1])
                 if block_area > 0:
@@ -76,7 +79,6 @@ def page_model_info_to_page_info(page_model_info, image_dict, page, image_writer
                         img_body_blocks.append(block)
             else:
                 img_body_blocks.append(block)
-
 
     """将所有区块的bbox整理到一起"""
     if formula_enabled:
@@ -161,14 +163,16 @@ def page_model_info_to_page_info(page_model_info, image_dict, page, image_writer
     return page_info
 
 
-def result_to_middle_json(model_list, images_list, pdf_doc, image_writer, lang=None, ocr_enable=False, formula_enabled=True):
-    middle_json = {"pdf_info": [], "_backend":"pipeline", "_version_name": __version__}
+def result_to_middle_json(model_list, images_list, pdf_doc, image_writer, lang=None, ocr_enable=False,
+                          formula_enabled=True):
+    middle_json = {"pdf_info": [], "_backend": "pipeline", "_version_name": __version__}
     formula_enabled = get_formula_enable(formula_enabled)
     for page_index, page_model_info in tqdm(enumerate(model_list), total=len(model_list), desc="Processing pages"):
         page = pdf_doc[page_index]
         image_dict = images_list[page_index]
         page_info = page_model_info_to_page_info(
-            page_model_info, image_dict, page, image_writer, page_index, ocr_enable=ocr_enable, formula_enabled=formula_enabled
+            page_model_info, image_dict, page, image_writer, page_index, ocr_enable=ocr_enable,
+            formula_enabled=formula_enabled
         )
         if page_info is None:
             page_w, page_h = map(int, page.get_size())

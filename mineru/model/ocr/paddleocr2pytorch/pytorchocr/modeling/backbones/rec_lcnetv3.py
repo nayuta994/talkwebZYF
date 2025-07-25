@@ -23,7 +23,7 @@ from ..common import Activation
 NET_CONFIG_det = {
     "blocks2":
     # k, in_c, out_c, s, use_se
-    [[3, 16, 32, 1, False]],
+        [[3, 16, 32, 1, False]],
     "blocks3": [[3, 32, 64, 2, False], [3, 64, 64, 1, False]],
     "blocks4": [[3, 64, 128, 2, False], [3, 128, 128, 1, False]],
     "blocks5": [
@@ -44,7 +44,7 @@ NET_CONFIG_det = {
 NET_CONFIG_rec = {
     "blocks2":
     # k, in_c, out_c, s, use_se
-    [[3, 16, 32, 1, False]],
+        [[3, 16, 32, 1, False]],
     "blocks3": [[3, 32, 64, 1, False], [3, 64, 64, 1, False]],
     "blocks4": [[3, 64, 128, (2, 1), False], [3, 128, 128, 1, False]],
     "blocks5": [
@@ -84,7 +84,7 @@ class LearnableAffineBlock(nn.Module):
 
 class ConvBNLayer(nn.Module):
     def __init__(
-        self, in_channels, out_channels, kernel_size, stride, groups=1, lr_mult=1.0
+            self, in_channels, out_channels, kernel_size, stride, groups=1, lr_mult=1.0
     ):
         super().__init__()
         self.conv = nn.Conv2d(
@@ -123,15 +123,15 @@ class Act(nn.Module):
 
 class LearnableRepLayer(nn.Module):
     def __init__(
-        self,
-        in_channels,
-        out_channels,
-        kernel_size,
-        stride=1,
-        groups=1,
-        num_conv_branches=1,
-        lr_mult=1.0,
-        lab_lr=0.1,
+            self,
+            in_channels,
+            out_channels,
+            kernel_size,
+            stride=1,
+            groups=1,
+            num_conv_branches=1,
+            lr_mult=1.0,
+            lab_lr=0.1,
     ):
         super().__init__()
         self.is_repped = False
@@ -308,15 +308,15 @@ class SELayer(nn.Module):
 
 class LCNetV3Block(nn.Module):
     def __init__(
-        self,
-        in_channels,
-        out_channels,
-        stride,
-        dw_size,
-        use_se=False,
-        conv_kxk_num=4,
-        lr_mult=1.0,
-        lab_lr=0.1,
+            self,
+            in_channels,
+            out_channels,
+            stride,
+            dw_size,
+            use_se=False,
+            conv_kxk_num=4,
+            lr_mult=1.0,
+            lab_lr=0.1,
     ):
         super().__init__()
         self.use_se = use_se
@@ -352,13 +352,13 @@ class LCNetV3Block(nn.Module):
 
 class PPLCNetV3(nn.Module):
     def __init__(
-        self,
-        scale=1.0,
-        conv_kxk_num=4,
-        lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-        lab_lr=0.1,
-        det=False,
-        **kwargs
+            self,
+            scale=1.0,
+            conv_kxk_num=4,
+            lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            lab_lr=0.1,
+            det=False,
+            **kwargs
     ):
         super().__init__()
         self.scale = scale
@@ -373,7 +373,7 @@ class PPLCNetV3(nn.Module):
             type(self.lr_mult_list)
         )
         assert (
-            len(self.lr_mult_list) == 6
+                len(self.lr_mult_list) == 6
         ), "lr_mult_list length should be 6 but got {}".format(len(self.lr_mult_list))
 
         self.conv1 = ConvBNLayer(

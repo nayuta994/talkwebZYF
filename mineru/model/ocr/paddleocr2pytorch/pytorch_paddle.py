@@ -12,27 +12,27 @@ from loguru import logger
 from mineru.utils.config_reader import get_device
 from mineru.utils.enum_class import ModelPath
 from mineru.utils.models_download_utils import auto_download_and_get_model_root_path
-from ....utils.ocr_utils import check_img, preprocess_image, sorted_boxes, merge_det_boxes, update_det_boxes, get_rotate_crop_image
+from ....utils.ocr_utils import check_img, preprocess_image, sorted_boxes, merge_det_boxes, update_det_boxes, \
+    get_rotate_crop_image
 from .tools.infer.predict_system import TextSystem
 from .tools.infer import pytorchocr_utility as utility
 import argparse
 
-
 latin_lang = [
-        'af', 'az', 'bs', 'cs', 'cy', 'da', 'de', 'es', 'et', 'fr', 'ga', 'hr',  # noqa: E126
-        'hu', 'id', 'is', 'it', 'ku', 'la', 'lt', 'lv', 'mi', 'ms', 'mt', 'nl',
-        'no', 'oc', 'pi', 'pl', 'pt', 'ro', 'rs_latin', 'sk', 'sl', 'sq', 'sv',
-        'sw', 'tl', 'tr', 'uz', 'vi', 'french', 'german'
+    'af', 'az', 'bs', 'cs', 'cy', 'da', 'de', 'es', 'et', 'fr', 'ga', 'hr',  # noqa: E126
+    'hu', 'id', 'is', 'it', 'ku', 'la', 'lt', 'lv', 'mi', 'ms', 'mt', 'nl',
+    'no', 'oc', 'pi', 'pl', 'pt', 'ro', 'rs_latin', 'sk', 'sl', 'sq', 'sv',
+    'sw', 'tl', 'tr', 'uz', 'vi', 'french', 'german'
 ]
 arabic_lang = ['ar', 'fa', 'ug', 'ur']
 cyrillic_lang = [
-        'rs_cyrillic', 'bg', 'mn', 'abq', 'ady', 'kbd', 'ava',  # noqa: E126
-        'dar', 'inh', 'che', 'lbe', 'lez', 'tab'
+    'rs_cyrillic', 'bg', 'mn', 'abq', 'ady', 'kbd', 'ava',  # noqa: E126
+    'dar', 'inh', 'che', 'lbe', 'lez', 'tab'
 ]
 east_slavic_lang = ["ru", "be", "uk"]
 devanagari_lang = [
-        'hi', 'mr', 'ne', 'bh', 'mai', 'ang', 'bho', 'mah', 'sck', 'new', 'gom',  # noqa: E126
-        'sa', 'bgc'
+    'hi', 'mr', 'ne', 'bh', 'mai', 'ang', 'bho', 'mah', 'sck', 'new', 'gom',  # noqa: E126
+    'sa', 'bgc'
 ]
 
 
@@ -44,7 +44,7 @@ def get_model_params(lang, config):
         dict_file = params.get('dict')
         return det, rec, dict_file
     else:
-        raise Exception (f'Language {lang} not supported')
+        raise Exception(f'Language {lang} not supported')
 
 
 root_dir = Path(__file__).resolve().parent
@@ -194,6 +194,7 @@ class PytorchPaddleOCR(TextSystem):
 
         return filter_boxes, filter_rec_res
 
+
 if __name__ == '__main__':
     pytorch_paddle_ocr = PytorchPaddleOCR()
     img = cv2.imread("/Users/myhloli/Downloads/screenshot-20250326-194348.png")
@@ -205,5 +206,3 @@ if __name__ == '__main__':
         tmp_res = [[box.tolist(), res] for box, res in zip(dt_boxes, rec_res)]
         ocr_res.append(tmp_res)
     print(ocr_res)
-
-

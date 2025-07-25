@@ -32,10 +32,10 @@ def pdf_page_to_image(page: pdfium.PdfPage, dpi=200) -> dict:
 
 
 def load_images_from_pdf(
-    pdf_bytes: bytes,
-    dpi=200,
-    start_page_id=0,
-    end_page_id=None,
+        pdf_bytes: bytes,
+        dpi=200,
+        start_page_id=0,
+        end_page_id=None,
 ):
     images_list = []
     pdf_doc = pdfium.PdfDocument(pdf_bytes)

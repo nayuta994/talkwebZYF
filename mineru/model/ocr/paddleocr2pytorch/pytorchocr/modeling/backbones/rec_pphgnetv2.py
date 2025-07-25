@@ -46,13 +46,13 @@ class IdentityBasedConv1x1(nn.Conv2d):
 
 class BNAndPad(nn.Module):
     def __init__(
-        self,
-        pad_pixels,
-        num_features,
-        epsilon=1e-5,
-        momentum=0.1,
-        last_conv_bias=None,
-        bn=nn.BatchNorm2d,
+            self,
+            pad_pixels,
+            num_features,
+            epsilon=1e-5,
+            momentum=0.1,
+            last_conv_bias=None,
+            bn=nn.BatchNorm2d,
     ):
         super().__init__()
         self.bn = bn(num_features, momentum=momentum, epsilon=epsilon)
@@ -66,7 +66,7 @@ class BNAndPad(nn.Module):
             if self.last_conv_bias is not None:
                 bias += self.last_conv_bias
             pad_values = self.bn.bias + self.bn.weight * (
-                bias / torch.sqrt(self.bn._variance + self.bn._epsilon)
+                    bias / torch.sqrt(self.bn._variance + self.bn._epsilon)
             )
             """ pad """
             # TODO: n,h,w,c format is not supported yet
@@ -102,14 +102,14 @@ class BNAndPad(nn.Module):
 
 
 def conv_bn(
-    in_channels,
-    out_channels,
-    kernel_size,
-    stride=1,
-    padding=0,
-    dilation=1,
-    groups=1,
-    padding_mode="zeros",
+        in_channels,
+        out_channels,
+        kernel_size,
+        stride=1,
+        padding=0,
+        dilation=1,
+        groups=1,
+        padding_mode="zeros",
 ):
     conv_layer = nn.Conv2d(
         in_channels=in_channels,
@@ -153,15 +153,15 @@ def transIII_1x1_kxk(k1, b1, k2, b2, groups):
         k1_group_width = k1.shape[0] // groups
         k2_group_width = k2.shape[0] // groups
         for g in range(groups):
-            k1_T_slice = k1_T[:, g * k1_group_width : (g + 1) * k1_group_width, :, :]
-            k2_slice = k2[g * k2_group_width : (g + 1) * k2_group_width, :, :, :]
+            k1_T_slice = k1_T[:, g * k1_group_width: (g + 1) * k1_group_width, :, :]
+            k2_slice = k2[g * k2_group_width: (g + 1) * k2_group_width, :, :, :]
             k_slices.append(F.conv2d(k2_slice, k1_T_slice))
             b_slices.append(
                 (
-                    k2_slice
-                    * b1[g * k1_group_width : (g + 1) * k1_group_width].reshape(
-                        [1, -1, 1, 1]
-                    )
+                        k2_slice
+                        * b1[g * k1_group_width: (g + 1) * k1_group_width].reshape(
+                    [1, -1, 1, 1]
+                )
                 ).sum((1, 2, 3))
             )
         k, b_hat = transIV_depthconcat(k_slices, b_slices)
@@ -176,7 +176,7 @@ def transV_avg(channels, kernel_size, groups):
     input_dim = channels // groups
     k = torch.zeros((channels, input_dim, kernel_size, kernel_size))
     k[np.arange(channels), np.tile(np.arange(input_dim), groups), :, :] = (
-        1.0 / kernel_size**2
+            1.0 / kernel_size ** 2
     )
     return k
 
@@ -191,16 +191,16 @@ def transVI_multiscale(kernel, target_kernel_size):
 
 class DiverseBranchBlock(nn.Module):
     def __init__(
-        self,
-        num_channels,
-        num_filters,
-        filter_size,
-        stride=1,
-        groups=1,
-        act=None,
-        is_repped=False,
-        single_init=False,
-        **kwargs,
+            self,
+            num_channels,
+            num_filters,
+            filter_size,
+            stride=1,
+            groups=1,
+            act=None,
+            is_repped=False,
+            single_init=False,
+            **kwargs,
     ):
         super().__init__()
 
@@ -463,14 +463,14 @@ class TheseusLayer(nn.Module):
         return res_dict
 
     def init_net(
-        self,
-        stages_pattern=None,
-        return_patterns=None,
-        return_stages=None,
-        freeze_befor=None,
-        stop_after=None,
-        *args,
-        **kwargs,
+            self,
+            stages_pattern=None,
+            return_patterns=None,
+            return_stages=None,
+            freeze_befor=None,
+            stop_after=None,
+            *args,
+            **kwargs,
     ):
         # init the output of net
         if return_patterns or return_stages:
@@ -538,9 +538,9 @@ class TheseusLayer(nn.Module):
         raise DeprecationWarning(msg)
 
     def upgrade_sublayer(
-        self,
-        layer_name_pattern: Union[str, List[str]],
-        handle_func: Callable[[nn.Module, str], nn.Module],
+            self,
+            layer_name_pattern: Union[str, List[str]],
+            handle_func: Callable[[nn.Module, str], nn.Module],
     ) -> Dict[str, nn.Module]:
         """use 'handle_func' to modify the sub-layer(s) specified by 'layer_name_pattern'.
 
@@ -708,7 +708,7 @@ def save_sub_res_hook(layer, input, output):
 
 
 def set_identity(
-    parent_layer: nn.Module, layer_name: str, layer_index_list: str = None
+        parent_layer: nn.Module, layer_name: str, layer_index_list: str = None
 ) -> bool:
     """set the layer specified by layer_name and layer_index_list to Identity.
 
@@ -746,7 +746,7 @@ def set_identity(
 
 
 def parse_pattern_str(
-    pattern: str, parent_layer: nn.Module
+        pattern: str, parent_layer: nn.Module
 ) -> Union[None, List[Dict[str, Union[nn.Module, str, None]]]]:
     """parse the string type pattern.
 
@@ -788,7 +788,7 @@ def parse_pattern_str(
         if target_layer_index_list:
             for target_layer_index in target_layer_index_list:
                 if int(target_layer_index) < 0 or int(target_layer_index) >= len(
-                    target_layer
+                        target_layer
                 ):
                     msg = f"Not found layer by index('{target_layer_index}') specified in pattern('{pattern}'). The index should < {len(target_layer)} and > 0."
                     return None
@@ -872,16 +872,16 @@ class ConvBNAct(TheseusLayer):
     """
 
     def __init__(
-        self,
-        in_channels,
-        out_channels,
-        kernel_size=3,
-        stride=1,
-        padding=1,
-        groups=1,
-        use_act=True,
-        use_lab=False,
-        lr_mult=1.0,
+            self,
+            in_channels,
+            out_channels,
+            kernel_size=3,
+            stride=1,
+            padding=1,
+            groups=1,
+            use_act=True,
+            use_lab=False,
+            lr_mult=1.0,
     ):
         super().__init__()
         self.use_act = use_act
@@ -926,13 +926,13 @@ class LightConvBNAct(TheseusLayer):
     """
 
     def __init__(
-        self,
-        in_channels,
-        out_channels,
-        kernel_size,
-        use_lab=False,
-        lr_mult=1.0,
-        **kwargs,
+            self,
+            in_channels,
+            out_channels,
+            kernel_size,
+            use_lab=False,
+            lr_mult=1.0,
+            **kwargs,
     ):
         super().__init__()
         self.conv1 = ConvBNAct(
@@ -989,13 +989,13 @@ class StemBlock(TheseusLayer):
     """
 
     def __init__(
-        self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        use_lab=False,
-        lr_mult=1.0,
-        text_rec=False,
+            self,
+            in_channels,
+            mid_channels,
+            out_channels,
+            use_lab=False,
+            lr_mult=1.0,
+            text_rec=False,
     ):
         super().__init__()
         self.stem1 = ConvBNAct(
@@ -1075,16 +1075,16 @@ class HGV2_Block(TheseusLayer):
     """
 
     def __init__(
-        self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        kernel_size=3,
-        layer_num=6,
-        identity=False,
-        light_block=True,
-        use_lab=False,
-        lr_mult=1.0,
+            self,
+            in_channels,
+            mid_channels,
+            out_channels,
+            kernel_size=3,
+            layer_num=6,
+            identity=False,
+            light_block=True,
+            use_lab=False,
+            lr_mult=1.0,
     ):
         super().__init__()
         self.identity = identity
@@ -1154,18 +1154,18 @@ class HGV2_Stage(TheseusLayer):
     """
 
     def __init__(
-        self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        block_num,
-        layer_num=6,
-        is_downsample=True,
-        light_block=True,
-        kernel_size=3,
-        use_lab=False,
-        stride=2,
-        lr_mult=1.0,
+            self,
+            in_channels,
+            mid_channels,
+            out_channels,
+            block_num,
+            layer_num=6,
+            is_downsample=True,
+            light_block=True,
+            kernel_size=3,
+            use_lab=False,
+            stride=2,
+            lr_mult=1.0,
     ):
 
         super().__init__()
@@ -1224,19 +1224,19 @@ class PPHGNetV2(TheseusLayer):
     """
 
     def __init__(
-        self,
-        stage_config,
-        stem_channels=[3, 32, 64],
-        use_lab=False,
-        use_last_conv=True,
-        class_expand=2048,
-        dropout_prob=0.0,
-        class_num=1000,
-        lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0],
-        det=False,
-        text_rec=False,
-        out_indices=None,
-        **kwargs,
+            self,
+            stage_config,
+            stem_channels=[3, 32, 64],
+            use_lab=False,
+            use_last_conv=True,
+            class_expand=2048,
+            dropout_prob=0.0,
+            class_num=1000,
+            lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0],
+            det=False,
+            text_rec=False,
+            out_indices=None,
+            **kwargs,
     ):
         super().__init__()
         self.det = det

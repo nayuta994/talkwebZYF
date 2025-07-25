@@ -6,12 +6,12 @@ from ..io.base import IOReader, IOWriter
 
 class S3Reader(IOReader):
     def __init__(
-        self,
-        bucket: str,
-        ak: str,
-        sk: str,
-        endpoint_url: str,
-        addressing_style: str = 'auto',
+            self,
+            bucket: str,
+            ak: str,
+            sk: str,
+            endpoint_url: str,
+            addressing_style: str = 'auto',
     ):
         """s3 reader client.
 
@@ -60,7 +60,7 @@ class S3Reader(IOReader):
             bytes: the content of file
         """
         if limit > -1:
-            range_header = f'bytes={offset}-{offset+limit-1}'
+            range_header = f'bytes={offset}-{offset + limit - 1}'
             res = self._s3_client.get_object(
                 Bucket=self._bucket, Key=key, Range=range_header
             )
@@ -73,12 +73,12 @@ class S3Reader(IOReader):
 
 class S3Writer(IOWriter):
     def __init__(
-        self,
-        bucket: str,
-        ak: str,
-        sk: str,
-        endpoint_url: str,
-        addressing_style: str = 'auto',
+            self,
+            bucket: str,
+            ak: str,
+            sk: str,
+            endpoint_url: str,
+            addressing_style: str = 'auto',
     ):
         """s3 reader client.
 

@@ -113,7 +113,7 @@ class NormalizeImage(object):
         assert isinstance(img,
                           np.ndarray), "invalid input 'img' in NormalizeImage"
         data['image'] = (
-            img.astype('float32') * self.scale - self.mean) / self.std
+                                img.astype('float32') * self.scale - self.mean) / self.std
         return data
 
 

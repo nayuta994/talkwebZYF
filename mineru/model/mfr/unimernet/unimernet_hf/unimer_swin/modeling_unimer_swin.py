@@ -39,7 +39,6 @@ from transformers.utils import (
 )
 from .configuration_unimer_swin import UnimerSwinConfig
 
-
 logger = logging.get_logger(__name__)
 
 # General docstring
@@ -209,10 +208,10 @@ class UnimerSwinEmbeddings(nn.Module):
         return torch.cat((class_pos_embed.unsqueeze(0), patch_pos_embed), dim=1)
 
     def forward(
-        self,
-        pixel_values: Optional[torch.FloatTensor],
-        bool_masked_pos: Optional[torch.BoolTensor] = None,
-        interpolate_pos_encoding: bool = False,
+            self,
+            pixel_values: Optional[torch.FloatTensor],
+            bool_masked_pos: Optional[torch.BoolTensor] = None,
+            interpolate_pos_encoding: bool = False,
     ) -> Tuple[torch.Tensor]:
         _, num_channels, height, width = pixel_values.shape
         embeddings, output_dimensions = self.patch_embeddings(pixel_values)
@@ -230,12 +229,13 @@ class UnimerSwinEmbeddings(nn.Module):
             #     embeddings = embeddings + self.interpolate_pos_encoding(embeddings, height, width)
             # else:
             #     embeddings = embeddings + self.position_embeddings
-            embeddings = embeddings + self.position_embeddings[:, :seq_len, :] # code edited.
+            embeddings = embeddings + self.position_embeddings[:, :seq_len, :]  # code edited.
 
         ### code added. ###
         if self.row_embeddings is not None and self.column_embeddings is not None:
             # Repeat the x position embeddings across the y axis like 0, 1, 2, 3, 0, 1, 2, 3, ...
-            row_embeddings = self.row_embeddings[:, :output_dimensions[0], :].repeat_interleave(output_dimensions[1], dim=1)
+            row_embeddings = self.row_embeddings[:, :output_dimensions[0], :].repeat_interleave(output_dimensions[1],
+                                                                                                dim=1)
             column_embeddings = self.column_embeddings[:, :output_dimensions[1], :].repeat(1, output_dimensions[0], 1)
             embeddings = embeddings + row_embeddings + column_embeddings
         ######
@@ -243,6 +243,7 @@ class UnimerSwinEmbeddings(nn.Module):
         embeddings = self.dropout(embeddings)
 
         return embeddings, output_dimensions
+
 
 class StemLayer(nn.Module):
     r""" Stem layer of InternImage
@@ -274,6 +275,7 @@ class StemLayer(nn.Module):
         x = self.act(x)
         x = self.conv2(x)
         return x
+
 
 # Copied from transformers.models.swin.modeling_swin.SwinPatchEmbeddings with Swin->UnimerSwin
 class UnimerSwinPatchEmbeddings(nn.Module):
@@ -458,11 +460,11 @@ class UnimerSwinSelfAttention(nn.Module):
         return x.permute(0, 2, 1, 3)
 
     def forward(
-        self,
-        hidden_states: torch.Tensor,
-        attention_mask: Optional[torch.FloatTensor] = None,
-        head_mask: Optional[torch.FloatTensor] = None,
-        output_attentions: Optional[bool] = False,
+            self,
+            hidden_states: torch.Tensor,
+            attention_mask: Optional[torch.FloatTensor] = None,
+            head_mask: Optional[torch.FloatTensor] = None,
+            output_attentions: Optional[bool] = False,
     ) -> Tuple[torch.Tensor]:
         batch_size, dim, num_channels = hidden_states.shape
         mixed_query_layer = self.query(hidden_states)
@@ -555,11 +557,11 @@ class UnimerSwinAttention(nn.Module):
         self.pruned_heads = self.pruned_heads.union(heads)
 
     def forward(
-        self,
-        hidden_states: torch.Tensor,
-        attention_mask: Optional[torch.FloatTensor] = None,
-        head_mask: Optional[torch.FloatTensor] = None,
-        output_attentions: Optional[bool] = False,
+            self,
+            hidden_states: torch.Tensor,
+            attention_mask: Optional[torch.FloatTensor] = None,
+            head_mask: Optional[torch.FloatTensor] = None,
+            output_attentions: Optional[bool] = False,
     ) -> Tuple[torch.Tensor]:
         self_outputs = self.self(hidden_states, attention_mask, head_mask, output_attentions)
         attention_output = self.output(self_outputs[0], hidden_states)
@@ -599,13 +601,14 @@ class UnimerSwinOutput(nn.Module):
 class ConvEnhance(nn.Module):
     """Depth-wise convolution to get the positional information.
     """
+
     def __init__(self, config, dim, k=3):
         super(ConvEnhance, self).__init__()
         self.proj = nn.Conv2d(dim,
                               dim,
-                              (k,k),
-                              (1,1),
-                              (k // 2,k // 2),
+                              (k, k),
+                              (1, 1),
+                              (k // 2, k // 2),
                               groups=dim)
         self.act_fn = ACT2FN[config.hidden_act]
 
@@ -634,7 +637,7 @@ class UnimerSwinLayer(nn.Module):
         self.layernorm_before = nn.LayerNorm(dim, eps=config.layer_norm_eps)
 
         self.ce = nn.ModuleList([ConvEnhance(config, dim=dim, k=3),
-                                  ConvEnhance(config, dim=dim, k=3)])
+                                 ConvEnhance(config, dim=dim, k=3)])
 
         self.attention = UnimerSwinAttention(config, dim, num_heads, window_size=self.window_size)
         self.drop_path = UnimerSwinDropPath(config.drop_path_rate) if config.drop_path_rate > 0.0 else nn.Identity()
@@ -686,12 +689,12 @@ class UnimerSwinLayer(nn.Module):
         return hidden_states, pad_values
 
     def forward(
-        self,
-        hidden_states: torch.Tensor,
-        input_dimensions: Tuple[int, int],
-        head_mask: Optional[torch.FloatTensor] = None,
-        output_attentions: Optional[bool] = False,
-        always_partition: Optional[bool] = False,
+            self,
+            hidden_states: torch.Tensor,
+            input_dimensions: Tuple[int, int],
+            head_mask: Optional[torch.FloatTensor] = None,
+            output_attentions: Optional[bool] = False,
+            always_partition: Optional[bool] = False,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         if not always_partition:
             self.set_shift_and_window_size(input_dimensions)
@@ -699,12 +702,9 @@ class UnimerSwinLayer(nn.Module):
             pass
         height, width = input_dimensions
         batch_size, _, channels = hidden_states.size()
-        
-
 
         hidden_states = self.ce[0](hidden_states, input_dimensions)
         shortcut = hidden_states
-
 
         hidden_states = self.layernorm_before(hidden_states)
         hidden_states = hidden_states.view(batch_size, height, width, channels)
@@ -749,8 +749,6 @@ class UnimerSwinLayer(nn.Module):
 
         hidden_states = shortcut + self.drop_path(attention_windows)
 
-
-
         hidden_states = self.ce[1](hidden_states, input_dimensions)
         layer_output = self.layernorm_after(hidden_states)
         layer_output = self.intermediate(layer_output)
@@ -788,12 +786,12 @@ class UnimerSwinStage(nn.Module):
         self.pointing = False
 
     def forward(
-        self,
-        hidden_states: torch.Tensor,
-        input_dimensions: Tuple[int, int],
-        head_mask: Optional[torch.FloatTensor] = None,
-        output_attentions: Optional[bool] = False,
-        always_partition: Optional[bool] = False,
+            self,
+            hidden_states: torch.Tensor,
+            input_dimensions: Tuple[int, int],
+            head_mask: Optional[torch.FloatTensor] = None,
+            output_attentions: Optional[bool] = False,
+            always_partition: Optional[bool] = False,
     ) -> Tuple[torch.Tensor]:
         height, width = input_dimensions
         for i, layer_module in enumerate(self.blocks):
@@ -831,11 +829,11 @@ class UnimerSwinEncoder(nn.Module):
             [
                 UnimerSwinStage(
                     config=config,
-                    dim=int(config.embed_dim * 2**i_layer),
-                    input_resolution=(grid_size[0] // (2**i_layer), grid_size[1] // (2**i_layer)),
+                    dim=int(config.embed_dim * 2 ** i_layer),
+                    input_resolution=(grid_size[0] // (2 ** i_layer), grid_size[1] // (2 ** i_layer)),
                     depth=config.depths[i_layer],
                     num_heads=config.num_heads[i_layer],
-                    drop_path=dpr[sum(config.depths[:i_layer]) : sum(config.depths[: i_layer + 1])],
+                    drop_path=dpr[sum(config.depths[:i_layer]): sum(config.depths[: i_layer + 1])],
                     downsample=UnimerSwinPatchMerging if (i_layer < self.num_layers - 1) else None,
                 )
                 for i_layer in range(self.num_layers)
@@ -845,15 +843,15 @@ class UnimerSwinEncoder(nn.Module):
         self.gradient_checkpointing = False
 
     def forward(
-        self,
-        hidden_states: torch.Tensor,
-        input_dimensions: Tuple[int, int],
-        head_mask: Optional[torch.FloatTensor] = None,
-        output_attentions: Optional[bool] = False,
-        output_hidden_states: Optional[bool] = False,
-        output_hidden_states_before_downsampling: Optional[bool] = False,
-        always_partition: Optional[bool] = False,
-        return_dict: Optional[bool] = True,
+            self,
+            hidden_states: torch.Tensor,
+            input_dimensions: Tuple[int, int],
+            head_mask: Optional[torch.FloatTensor] = None,
+            output_attentions: Optional[bool] = False,
+            output_hidden_states: Optional[bool] = False,
+            output_hidden_states_before_downsampling: Optional[bool] = False,
+            always_partition: Optional[bool] = False,
+            return_dict: Optional[bool] = True,
     ) -> Union[Tuple, UnimerSwinEncoderOutput]:
         all_hidden_states = () if output_hidden_states else None
         all_reshaped_hidden_states = () if output_hidden_states else None
@@ -1021,14 +1019,14 @@ class UnimerSwinModel(UnimerSwinPreTrainedModel):
         expected_output=_EXPECTED_OUTPUT_SHAPE,
     )
     def forward(
-        self,
-        pixel_values: Optional[torch.FloatTensor] = None,
-        bool_masked_pos: Optional[torch.BoolTensor] = None,
-        head_mask: Optional[torch.FloatTensor] = None,
-        output_attentions: Optional[bool] = None,
-        output_hidden_states: Optional[bool] = None,
-        interpolate_pos_encoding: bool = False,
-        return_dict: Optional[bool] = None,
+            self,
+            pixel_values: Optional[torch.FloatTensor] = None,
+            bool_masked_pos: Optional[torch.BoolTensor] = None,
+            head_mask: Optional[torch.FloatTensor] = None,
+            output_attentions: Optional[bool] = None,
+            output_hidden_states: Optional[bool] = None,
+            interpolate_pos_encoding: bool = False,
+            return_dict: Optional[bool] = None,
     ) -> Union[Tuple, UnimerSwinModelOutput]:
         r"""
         bool_masked_pos (`torch.BoolTensor` of shape `(batch_size, num_patches)`):

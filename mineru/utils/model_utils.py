@@ -14,7 +14,6 @@ except ImportError:
 
 
 def crop_img(input_res, input_img, crop_paste_x=0, crop_paste_y=0):
-
     crop_xmin, crop_ymin = int(input_res['poly'][0]), int(input_res['poly'][1])
     crop_xmax, crop_ymax = int(input_res['poly'][4]), int(input_res['poly'][5])
 
@@ -221,8 +220,8 @@ def remove_overlaps_min_blocks(res_list):
                         None,
                     )
                     if (
-                        res_to_remove is not None
-                        and res_to_remove not in need_remove
+                            res_to_remove is not None
+                            and res_to_remove not in need_remove
                     ):
                         large_res = res1 if res1 != res_to_remove else res2
                         x1, y1, x2, y2 = large_res['bbox']

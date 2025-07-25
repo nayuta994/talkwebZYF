@@ -287,7 +287,7 @@ def draw_span_bbox(pdf_info, pdf_bytes, out_path, filename):
         c = canvas.Canvas(packet, pagesize=custom_page_size)
 
         # 获取当前页面的数据
-        draw_bbox_without_number(i, text_list, page, c,[255, 0, 0], False)
+        draw_bbox_without_number(i, text_list, page, c, [255, 0, 0], False)
         draw_bbox_without_number(i, inline_equation_list, page, c, [0, 255, 0], False)
         draw_bbox_without_number(i, interline_equation_list, page, c, [0, 0, 255], False)
         draw_bbox_without_number(i, image_list, page, c, [255, 204, 0], False)

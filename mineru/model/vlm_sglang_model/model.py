@@ -47,10 +47,10 @@ def downgrade_modality(modality):
 
 class Mineru2QwenForCausalLM(nn.Module):
     def __init__(
-        self,
-        config: Mineru2QwenConfig,
-        quant_config: Optional[QuantizationConfig] = None,
-        prefix: str = "",
+            self,
+            config: Mineru2QwenConfig,
+            quant_config: Optional[QuantizationConfig] = None,
+            prefix: str = "",
     ) -> None:
         super().__init__()
         self.config = config
@@ -166,7 +166,7 @@ class Mineru2QwenForCausalLM(nn.Module):
             except ValueError:
                 offset = 0
             # old_len + pad_len - 1, because we need to remove image_token_id
-            input_ids = input_ids[:offset] + [pad_values[image_idx]] * new_image_feature_len + input_ids[offset + 1 :]
+            input_ids = input_ids[:offset] + [pad_values[image_idx]] * new_image_feature_len + input_ids[offset + 1:]
             offset_list.append(offset)
             image_inputs.image_pad_len.append(new_image_feature_len)
 
@@ -191,10 +191,10 @@ class Mineru2QwenForCausalLM(nn.Module):
 
     @torch.no_grad()
     def forward(
-        self,
-        input_ids: torch.LongTensor,
-        positions: torch.Tensor,
-        forward_batch: ForwardBatch,
+            self,
+            input_ids: torch.LongTensor,
+            positions: torch.Tensor,
+            forward_batch: ForwardBatch,
     ) -> torch.Tensor:
         if hasattr(forward_batch, "mm_inputs"):
             # sglang==0.4.5.post3
@@ -287,9 +287,9 @@ class Mineru2QwenForCausalLM(nn.Module):
                         #     "anyres" if len(image_sizes[image_idx]) == 1 else "pad"
                         # )
                         if (
-                            image_feature.shape[0] > 1
-                            and "anyres" in image_aspect_ratio
-                            and modalities_list[image_idx] == "image"
+                                image_feature.shape[0] > 1
+                                and "anyres" in image_aspect_ratio
+                                and modalities_list[image_idx] == "image"
                         ):
                             base_image_feature = image_feature[0]
                             image_feature = image_feature[1:]
@@ -325,7 +325,7 @@ class Mineru2QwenForCausalLM(nn.Module):
 
                                 if "anyres_max" in image_aspect_ratio and matched_anyres_max_num_patches:
                                     c, h, w = image_feature.shape
-                                    times = math.sqrt(h * w / (max_num_patches * unit**2))
+                                    times = math.sqrt(h * w / (max_num_patches * unit ** 2))
                                     if times > 1.1:
                                         image_feature = image_feature[None]
                                         image_feature = nn.functional.interpolate(
@@ -359,7 +359,8 @@ class Mineru2QwenForCausalLM(nn.Module):
                                     math.ceil(height / 2),
                                     math.ceil(weight / 2),
                                 ]
-                                image_feature = nn.functional.interpolate(image_feature, size=scaled_shape, mode="bilinear")
+                                image_feature = nn.functional.interpolate(image_feature, size=scaled_shape,
+                                                                          mode="bilinear")
                                 image_feature = image_feature.flatten(2).transpose(1, 2).contiguous()  # N, C, H*W
                             if "unpad" in self.mm_patch_merge_type:
                                 image_feature = torch.cat(

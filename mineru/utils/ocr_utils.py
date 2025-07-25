@@ -8,6 +8,7 @@ class OcrConfidence:
     min_confidence = 0.5
     min_width = 3
 
+
 LINE_WIDTH_TO_HEIGHT_RATIO_THRESHOLD = 4  # 一般情况下，行宽度超过高度4倍时才是一个正常的横向文本块
 
 
@@ -34,6 +35,7 @@ def merge_spans_to_line(spans, threshold=0.6):
             lines.append(current_line)
 
         return lines
+
 
 def _is_overlaps_y_exceeds_threshold(bbox1,
                                      bbox2,
@@ -67,6 +69,7 @@ def _is_overlaps_x_exceeds_threshold(bbox1,
 def img_decode(content: bytes):
     np_arr = np.frombuffer(content, dtype=np.uint8)
     return cv2.imdecode(np_arr, cv2.IMREAD_UNCHANGED)
+
 
 def check_img(img):
     if isinstance(img, bytes):

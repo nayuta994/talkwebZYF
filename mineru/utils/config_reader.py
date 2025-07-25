@@ -9,7 +9,6 @@ try:
 except ImportError:
     pass
 
-
 # 定义配置文件名常量
 CONFIG_FILE_NAME = os.getenv('MINERU_TOOLS_CONFIG_JSON', 'mineru.json')
 

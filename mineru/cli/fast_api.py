@@ -18,6 +18,7 @@ from mineru.version import __version__
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
+
 def encode_image(image_path: str) -> str:
     """Encode image using base64"""
     with open(image_path, "rb") as f:
@@ -33,7 +34,7 @@ def get_infer_result(file_suffix_identifier: str, pdf_name: str, parse_dir: str)
     return None
 
 
-@app.post(path="/file_parse",)
+@app.post(path="/file_parse", )
 async def parse_pdf(
         files: List[UploadFile] = File(...),
         output_dir: str = Form("./output"),
@@ -51,7 +52,6 @@ async def parse_pdf(
         start_page_id: int = Form(0),
         end_page_id: int = Form(99999),
 ):
-
     # 获取命令行配置参数
     config = getattr(app.state, "config", {})
 
@@ -90,7 +90,6 @@ async def parse_pdf(
                     status_code=400,
                     content={"error": f"Unsupported file type: {file_path.suffix}"}
                 )
-
 
         # 设置语言列表，确保与文件数量一致
         actual_lang_list = lang_list
@@ -174,7 +173,6 @@ async def parse_pdf(
 @click.option('--port', default=8000, type=int, help='Server port (default: 8000)')
 @click.option('--reload', is_flag=True, help='Enable auto-reload (development mode)')
 def main(ctx, host, port, reload, **kwargs):
-
     kwargs.update(arg_parse(ctx))
 
     # 将配置参数存储到应用状态中

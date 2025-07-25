@@ -3,8 +3,8 @@ import copy
 import numpy as np
 
 from . import predict_rec
-from . import  predict_det
-from . import  predict_cls
+from . import predict_det
+from . import predict_cls
 
 
 class TextSystem(object):

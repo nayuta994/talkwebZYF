@@ -155,7 +155,6 @@ class TextRecognizer(BaseOCRV20):
         resized_image /= 0.5
         return resized_image
 
-
     def resize_norm_img_srn(self, img, image_shape):
         imgC, imgH, imgW = image_shape
 
@@ -262,7 +261,6 @@ class TextRecognizer(BaseOCRV20):
         pad_shape = padding_im.shape
 
         return padding_im, resize_shape, pad_shape, valid_ratio
-
 
     def norm_img_can(self, img, image_shape):
 
@@ -382,8 +380,10 @@ class TextRecognizer(BaseOCRV20):
                         gsrm_slf_attn_bias1_inp = gsrm_slf_attn_bias1_inp.to(self.device)
                         gsrm_slf_attn_bias2_inp = gsrm_slf_attn_bias2_inp.to(self.device)
 
-                        backbone_out = self.net.backbone(inp) # backbone_feat
-                        prob_out = self.net.head(backbone_out, [encoder_word_pos_inp, gsrm_word_pos_inp, gsrm_slf_attn_bias1_inp, gsrm_slf_attn_bias2_inp])
+                        backbone_out = self.net.backbone(inp)  # backbone_feat
+                        prob_out = self.net.head(backbone_out,
+                                                 [encoder_word_pos_inp, gsrm_word_pos_inp, gsrm_slf_attn_bias1_inp,
+                                                  gsrm_slf_attn_bias2_inp])
                     # preds = {"predict": prob_out[2]}
                     preds = {"predict": prob_out["predict"]}
 

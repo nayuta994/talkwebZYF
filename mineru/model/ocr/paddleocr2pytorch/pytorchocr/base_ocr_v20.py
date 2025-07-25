@@ -2,12 +2,12 @@ import os
 import torch
 from .modeling.architectures.base_model import BaseModel
 
+
 class BaseOCRV20:
     def __init__(self, config, **kwargs):
         self.config = config
         self.build_net(**kwargs)
         self.net.eval()
-
 
     def build_net(self, **kwargs):
         self.net = BaseModel(self.config, **kwargs)

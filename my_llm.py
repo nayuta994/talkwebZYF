@@ -100,3 +100,4 @@ if __name__ == "__main__":
 
     output_parser = StrOutputParser()
     chain = prompt | model | output_parser
+    print(chain.invoke())

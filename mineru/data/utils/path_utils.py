@@ -8,6 +8,7 @@ def remove_non_official_s3_args(s3path):
     arr = s3path.split("?")
     return arr[0]
 
+
 def parse_s3path(s3path: str):
     # from s3pathlib import S3Path
     # p = S3Path(remove_non_official_s3_args(s3path))

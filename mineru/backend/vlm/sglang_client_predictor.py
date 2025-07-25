@@ -21,16 +21,16 @@ from .utils import aio_load_resource, load_resource
 
 class SglangClientPredictor(BasePredictor):
     def __init__(
-        self,
-        server_url: str,
-        temperature: float = DEFAULT_TEMPERATURE,
-        top_p: float = DEFAULT_TOP_P,
-        top_k: int = DEFAULT_TOP_K,
-        repetition_penalty: float = DEFAULT_REPETITION_PENALTY,
-        presence_penalty: float = DEFAULT_PRESENCE_PENALTY,
-        no_repeat_ngram_size: int = DEFAULT_NO_REPEAT_NGRAM_SIZE,
-        max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
-        http_timeout: int = 600,
+            self,
+            server_url: str,
+            temperature: float = DEFAULT_TEMPERATURE,
+            top_p: float = DEFAULT_TOP_P,
+            top_k: int = DEFAULT_TOP_K,
+            repetition_penalty: float = DEFAULT_REPETITION_PENALTY,
+            presence_penalty: float = DEFAULT_PRESENCE_PENALTY,
+            no_repeat_ngram_size: int = DEFAULT_NO_REPEAT_NGRAM_SIZE,
+            max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
+            http_timeout: int = 600,
     ) -> None:
         super().__init__(
             temperature=temperature,
@@ -77,14 +77,14 @@ class SglangClientPredictor(BasePredictor):
         return response.json()["model_path"]
 
     def build_sampling_params(
-        self,
-        temperature: Optional[float],
-        top_p: Optional[float],
-        top_k: Optional[int],
-        repetition_penalty: Optional[float],
-        presence_penalty: Optional[float],
-        no_repeat_ngram_size: Optional[int],
-        max_new_tokens: Optional[int],
+            self,
+            temperature: Optional[float],
+            top_p: Optional[float],
+            top_k: Optional[int],
+            repetition_penalty: Optional[float],
+            presence_penalty: Optional[float],
+            no_repeat_ngram_size: Optional[int],
+            max_new_tokens: Optional[int],
     ) -> dict:
         if temperature is None:
             temperature = self.temperature
@@ -116,10 +116,10 @@ class SglangClientPredictor(BasePredictor):
         }
 
     def build_request_body(
-        self,
-        image: bytes,
-        prompt: str,
-        sampling_params: dict,
+            self,
+            image: bytes,
+            prompt: str,
+            sampling_params: dict,
     ) -> dict:
         image_base64 = b64encode(image).decode("utf-8")
         return {
@@ -130,16 +130,16 @@ class SglangClientPredictor(BasePredictor):
         }
 
     def predict(
-        self,
-        image: str | bytes,
-        prompt: str = "",
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        top_k: Optional[int] = None,
-        repetition_penalty: Optional[float] = None,
-        presence_penalty: Optional[float] = None,
-        no_repeat_ngram_size: Optional[int] = None,
-        max_new_tokens: Optional[int] = None,
+            self,
+            image: str | bytes,
+            prompt: str = "",
+            temperature: Optional[float] = None,
+            top_p: Optional[float] = None,
+            top_k: Optional[int] = None,
+            repetition_penalty: Optional[float] = None,
+            presence_penalty: Optional[float] = None,
+            no_repeat_ngram_size: Optional[int] = None,
+            max_new_tokens: Optional[int] = None,
     ) -> str:
         prompt = self.build_prompt(prompt)
 
@@ -162,17 +162,17 @@ class SglangClientPredictor(BasePredictor):
         return response_body["text"]
 
     def batch_predict(
-        self,
-        images: List[str] | List[bytes],
-        prompts: Union[List[str], str] = "",
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        top_k: Optional[int] = None,
-        repetition_penalty: Optional[float] = None,
-        presence_penalty: Optional[float] = None,
-        no_repeat_ngram_size: Optional[int] = None,
-        max_new_tokens: Optional[int] = None,
-        max_concurrency: int = 100,
+            self,
+            images: List[str] | List[bytes],
+            prompts: Union[List[str], str] = "",
+            temperature: Optional[float] = None,
+            top_p: Optional[float] = None,
+            top_k: Optional[int] = None,
+            repetition_penalty: Optional[float] = None,
+            presence_penalty: Optional[float] = None,
+            no_repeat_ngram_size: Optional[int] = None,
+            max_new_tokens: Optional[int] = None,
+            max_concurrency: int = 100,
     ) -> List[str]:
         try:
             loop = asyncio.get_running_loop()
@@ -198,16 +198,16 @@ class SglangClientPredictor(BasePredictor):
             return asyncio.run(task)
 
     def stream_predict(
-        self,
-        image: str | bytes,
-        prompt: str = "",
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        top_k: Optional[int] = None,
-        repetition_penalty: Optional[float] = None,
-        presence_penalty: Optional[float] = None,
-        no_repeat_ngram_size: Optional[int] = None,
-        max_new_tokens: Optional[int] = None,
+            self,
+            image: str | bytes,
+            prompt: str = "",
+            temperature: Optional[float] = None,
+            top_p: Optional[float] = None,
+            top_k: Optional[int] = None,
+            repetition_penalty: Optional[float] = None,
+            presence_penalty: Optional[float] = None,
+            no_repeat_ngram_size: Optional[int] = None,
+            max_new_tokens: Optional[int] = None,
     ) -> Iterable[str]:
         prompt = self.build_prompt(prompt)
 
@@ -228,10 +228,10 @@ class SglangClientPredictor(BasePredictor):
         request_body["stream"] = True
 
         with httpx.stream(
-            "POST",
-            self.server_url,
-            json=request_body,
-            timeout=self.http_timeout,
+                "POST",
+                self.server_url,
+                json=request_body,
+                timeout=self.http_timeout,
         ) as response:
             pos = 0
             for chunk in response.iter_lines():
@@ -246,17 +246,17 @@ class SglangClientPredictor(BasePredictor):
                 yield chunk_text
 
     async def aio_predict(
-        self,
-        image: str | bytes,
-        prompt: str = "",
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        top_k: Optional[int] = None,
-        repetition_penalty: Optional[float] = None,
-        presence_penalty: Optional[float] = None,
-        no_repeat_ngram_size: Optional[int] = None,
-        max_new_tokens: Optional[int] = None,
-        async_client: Optional[httpx.AsyncClient] = None,
+            self,
+            image: str | bytes,
+            prompt: str = "",
+            temperature: Optional[float] = None,
+            top_p: Optional[float] = None,
+            top_k: Optional[int] = None,
+            repetition_penalty: Optional[float] = None,
+            presence_penalty: Optional[float] = None,
+            no_repeat_ngram_size: Optional[int] = None,
+            max_new_tokens: Optional[int] = None,
+            async_client: Optional[httpx.AsyncClient] = None,
     ) -> str:
         prompt = self.build_prompt(prompt)
 
@@ -286,17 +286,17 @@ class SglangClientPredictor(BasePredictor):
         return response_body["text"]
 
     async def aio_batch_predict(
-        self,
-        images: List[str] | List[bytes],
-        prompts: Union[List[str], str] = "",
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        top_k: Optional[int] = None,
-        repetition_penalty: Optional[float] = None,
-        presence_penalty: Optional[float] = None,
-        no_repeat_ngram_size: Optional[int] = None,
-        max_new_tokens: Optional[int] = None,
-        max_concurrency: int = 100,
+            self,
+            images: List[str] | List[bytes],
+            prompts: Union[List[str], str] = "",
+            temperature: Optional[float] = None,
+            top_p: Optional[float] = None,
+            top_k: Optional[int] = None,
+            repetition_penalty: Optional[float] = None,
+            presence_penalty: Optional[float] = None,
+            no_repeat_ngram_size: Optional[int] = None,
+            max_new_tokens: Optional[int] = None,
+            max_concurrency: int = 100,
     ) -> List[str]:
         if not isinstance(prompts, list):
             prompts = [prompts] * len(images)
@@ -307,10 +307,10 @@ class SglangClientPredictor(BasePredictor):
         outputs = [""] * len(images)
 
         async def predict_with_semaphore(
-            idx: int,
-            image: str | bytes,
-            prompt: str,
-            async_client: httpx.AsyncClient,
+                idx: int,
+                image: str | bytes,
+                prompt: str,
+                async_client: httpx.AsyncClient,
         ):
             async with semaphore:
                 output = await self.aio_predict(
@@ -336,17 +336,17 @@ class SglangClientPredictor(BasePredictor):
         return outputs
 
     async def aio_batch_predict_as_iter(
-        self,
-        images: List[str] | List[bytes],
-        prompts: Union[List[str], str] = "",
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        top_k: Optional[int] = None,
-        repetition_penalty: Optional[float] = None,
-        presence_penalty: Optional[float] = None,
-        no_repeat_ngram_size: Optional[int] = None,
-        max_new_tokens: Optional[int] = None,
-        max_concurrency: int = 100,
+            self,
+            images: List[str] | List[bytes],
+            prompts: Union[List[str], str] = "",
+            temperature: Optional[float] = None,
+            top_p: Optional[float] = None,
+            top_k: Optional[int] = None,
+            repetition_penalty: Optional[float] = None,
+            presence_penalty: Optional[float] = None,
+            no_repeat_ngram_size: Optional[int] = None,
+            max_new_tokens: Optional[int] = None,
+            max_concurrency: int = 100,
     ) -> AsyncIterable[Tuple[int, str]]:
         if not isinstance(prompts, list):
             prompts = [prompts] * len(images)
@@ -356,10 +356,10 @@ class SglangClientPredictor(BasePredictor):
         semaphore = asyncio.Semaphore(max_concurrency)
 
         async def predict_with_semaphore(
-            idx: int,
-            image: str | bytes,
-            prompt: str,
-            async_client: httpx.AsyncClient,
+                idx: int,
+                image: str | bytes,
+                prompt: str,
+                async_client: httpx.AsyncClient,
         ):
             async with semaphore:
                 output = await self.aio_predict(
@@ -395,16 +395,16 @@ class SglangClientPredictor(BasePredictor):
                     yield task.result()
 
     async def aio_stream_predict(
-        self,
-        image: str | bytes,
-        prompt: str = "",
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        top_k: Optional[int] = None,
-        repetition_penalty: Optional[float] = None,
-        presence_penalty: Optional[float] = None,
-        no_repeat_ngram_size: Optional[int] = None,
-        max_new_tokens: Optional[int] = None,
+            self,
+            image: str | bytes,
+            prompt: str = "",
+            temperature: Optional[float] = None,
+            top_p: Optional[float] = None,
+            top_k: Optional[int] = None,
+            repetition_penalty: Optional[float] = None,
+            presence_penalty: Optional[float] = None,
+            no_repeat_ngram_size: Optional[int] = None,
+            max_new_tokens: Optional[int] = None,
     ) -> AsyncIterable[str]:
         prompt = self.build_prompt(prompt)
 
@@ -426,9 +426,9 @@ class SglangClientPredictor(BasePredictor):
 
         async with httpx.AsyncClient(timeout=self.http_timeout) as client:
             async with client.stream(
-                "POST",
-                self.server_url,
-                json=request_body,
+                    "POST",
+                    self.server_url,
+                    json=request_body,
             ) as response:
                 pos = 0
                 async for chunk in response.aiter_lines():

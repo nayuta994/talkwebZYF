@@ -17,7 +17,6 @@
 from transformers.configuration_utils import PretrainedConfig
 from transformers.utils import logging
 
-
 logger = logging.get_logger(__name__)
 
 
@@ -89,24 +88,24 @@ class UnimerSwinConfig(PretrainedConfig):
     }
 
     def __init__(
-        self,
-        image_size=224,
-        patch_size=4,
-        num_channels=3,
-        embed_dim=96,
-        depths=[2, 2, 6, 2],
-        num_heads=[3, 6, 12, 24],
-        window_size=7,
-        mlp_ratio=4.0,
-        qkv_bias=True,
-        hidden_dropout_prob=0.0,
-        attention_probs_dropout_prob=0.0,
-        drop_path_rate=0.1,
-        hidden_act="gelu",
-        use_absolute_embeddings=False,
-        initializer_range=0.02,
-        layer_norm_eps=1e-5,
-        **kwargs,
+            self,
+            image_size=224,
+            patch_size=4,
+            num_channels=3,
+            embed_dim=96,
+            depths=[2, 2, 6, 2],
+            num_heads=[3, 6, 12, 24],
+            window_size=7,
+            mlp_ratio=4.0,
+            qkv_bias=True,
+            hidden_dropout_prob=0.0,
+            attention_probs_dropout_prob=0.0,
+            drop_path_rate=0.1,
+            hidden_act="gelu",
+            use_absolute_embeddings=False,
+            initializer_range=0.02,
+            layer_norm_eps=1e-5,
+            **kwargs,
     ):
         super().__init__(**kwargs)
 

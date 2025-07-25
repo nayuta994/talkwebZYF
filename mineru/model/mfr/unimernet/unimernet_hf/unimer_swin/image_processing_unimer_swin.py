@@ -11,11 +11,11 @@ from torchvision.transforms.functional import resize
 class UnimerSwinImageProcessor(BaseImageProcessor):
     def __init__(
             self,
-            image_size = (192, 672),
-        ):
+            image_size=(192, 672),
+    ):
         self.input_size = [int(_) for _ in image_size]
         assert len(self.input_size) == 2
-    
+
         self.transform = alb.Compose(
             [
                 alb.ToGray(),

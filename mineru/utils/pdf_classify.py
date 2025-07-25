@@ -42,7 +42,8 @@ def classify(pdf_bytes):
         # 设置阈值：如果每页平均少于50个有效字符，认为需要OCR
         chars_threshold = 50
 
-        if (get_avg_cleaned_chars_per_page(pdf, pages_to_check) < chars_threshold) or detect_invalid_chars(sample_pdf_bytes):
+        if (get_avg_cleaned_chars_per_page(pdf, pages_to_check) < chars_threshold) or detect_invalid_chars(
+                sample_pdf_bytes):
             return 'ocr'
         else:
 
@@ -245,13 +246,13 @@ def detect_invalid_chars(sample_pdf_bytes: bytes) -> bool:
     if text_len == 0:
         cid_chars_radio = 0
     else:
-        cid_chars_radio = cid_count/(cid_count + text_len - cid_len)
+        cid_chars_radio = cid_count / (cid_count + text_len - cid_len)
     # logger.debug(f"cid_count: {cid_count}, text_len: {text_len}, cid_chars_radio: {cid_chars_radio}")
     '''当一篇文章存在5%以上的文本是乱码时,认为该文档为乱码文档'''
     if cid_chars_radio > 0.05:
         return True  # 乱码文档
     else:
-        return False   # 正常文档
+        return False  # 正常文档
 
 
 if __name__ == '__main__':

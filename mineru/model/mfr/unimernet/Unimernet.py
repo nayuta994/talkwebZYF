@@ -35,7 +35,7 @@ class UnimernetModel(object):
         formula_list = []
         mf_image_list = []
         for xyxy, conf, cla in zip(
-            mfd_res.boxes.xyxy.cpu(), mfd_res.boxes.conf.cpu(), mfd_res.boxes.cls.cpu()
+                mfd_res.boxes.xyxy.cpu(), mfd_res.boxes.conf.cpu(), mfd_res.boxes.cls.cpu()
         ):
             xmin, ymin, xmax, ymax = [int(p.item()) for p in xyxy]
             new_item = {

@@ -6,6 +6,7 @@ from mineru.utils.ocr_utils import _is_overlaps_y_exceeds_threshold, _is_overlap
 VERTICAL_SPAN_HEIGHT_TO_WIDTH_RATIO_THRESHOLD = 2
 VERTICAL_SPAN_IN_BLOCK_THRESHOLD = 0.8
 
+
 def fill_spans_in_blocks(blocks, spans, radio):
     """将allspans中的span按位置关系，放入blocks中."""
     block_with_spans = []
@@ -77,7 +78,8 @@ def fix_text_block(block):
     # 假设block中的span超过80%的数量高度是宽度的两倍以上，则认为是纵向文本块
     vertical_span_count = sum(
         1 for span in block['spans']
-        if (span['bbox'][3] - span['bbox'][1]) / (span['bbox'][2] - span['bbox'][0]) > VERTICAL_SPAN_HEIGHT_TO_WIDTH_RATIO_THRESHOLD
+        if (span['bbox'][3] - span['bbox'][1]) / (
+                    span['bbox'][2] - span['bbox'][0]) > VERTICAL_SPAN_HEIGHT_TO_WIDTH_RATIO_THRESHOLD
     )
     total_span_count = len(block['spans'])
     if total_span_count == 0:
@@ -111,11 +113,11 @@ def merge_spans_to_line(spans, threshold=0.6):
             # 如果当前的span类型为"interline_equation" 或者 当前行中已经有"interline_equation"
             # image和table类型，同上
             if span['type'] in [
-                    ContentType.INTERLINE_EQUATION, ContentType.IMAGE,
-                    ContentType.TABLE
+                ContentType.INTERLINE_EQUATION, ContentType.IMAGE,
+                ContentType.TABLE
             ] or any(s['type'] in [
-                    ContentType.INTERLINE_EQUATION, ContentType.IMAGE,
-                    ContentType.TABLE
+                ContentType.INTERLINE_EQUATION, ContentType.IMAGE,
+                ContentType.TABLE
             ] for s in current_line):
                 # 则开始新行
                 lines.append(current_line)

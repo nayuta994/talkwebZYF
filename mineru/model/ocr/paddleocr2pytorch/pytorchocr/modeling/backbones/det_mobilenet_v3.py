@@ -14,16 +14,16 @@ def make_divisible(v, divisor=8, min_value=None):
 
 class ConvBNLayer(nn.Module):
     def __init__(
-        self,
-        in_channels,
-        out_channels,
-        kernel_size,
-        stride,
-        padding,
-        groups=1,
-        if_act=True,
-        act=None,
-        name=None,
+            self,
+            in_channels,
+            out_channels,
+            kernel_size,
+            stride,
+            padding,
+            groups=1,
+            if_act=True,
+            act=None,
+            name=None,
     ):
         super(ConvBNLayer, self).__init__()
         self.if_act = if_act
@@ -86,15 +86,15 @@ class SEModule(nn.Module):
 
 class ResidualUnit(nn.Module):
     def __init__(
-        self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        kernel_size,
-        stride,
-        use_se,
-        act=None,
-        name="",
+            self,
+            in_channels,
+            mid_channels,
+            out_channels,
+            kernel_size,
+            stride,
+            use_se,
+            act=None,
+            name="",
     ):
         super(ResidualUnit, self).__init__()
         self.if_shortcut = stride == 1 and in_channels == out_channels
@@ -147,7 +147,7 @@ class ResidualUnit(nn.Module):
 
 class MobileNetV3(nn.Module):
     def __init__(
-        self, in_channels=3, model_name="large", scale=0.5, disable_se=False, **kwargs
+            self, in_channels=3, model_name="large", scale=0.5, disable_se=False, **kwargs
     ):
         """
         the MobilenetV3 backbone network for detection module.
@@ -201,7 +201,7 @@ class MobileNetV3(nn.Module):
 
         supported_scale = [0.35, 0.5, 0.75, 1.0, 1.25]
         assert (
-            scale in supported_scale
+                scale in supported_scale
         ), "supported scale are {} but input scale is {}".format(supported_scale, scale)
         inplanes = 16
         # conv1

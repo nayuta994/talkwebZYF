@@ -18,24 +18,24 @@ class DonutSwinConfig(object):
     }
 
     def __init__(
-        self,
-        image_size=224,
-        patch_size=4,
-        num_channels=3,
-        embed_dim=96,
-        depths=[2, 2, 6, 2],
-        num_heads=[3, 6, 12, 24],
-        window_size=7,
-        mlp_ratio=4.0,
-        qkv_bias=True,
-        hidden_dropout_prob=0.0,
-        attention_probs_dropout_prob=0.0,
-        drop_path_rate=0.1,
-        hidden_act="gelu",
-        use_absolute_embeddings=False,
-        initializer_range=0.02,
-        layer_norm_eps=1e-5,
-        **kwargs,
+            self,
+            image_size=224,
+            patch_size=4,
+            num_channels=3,
+            embed_dim=96,
+            depths=[2, 2, 6, 2],
+            num_heads=[3, 6, 12, 24],
+            window_size=7,
+            mlp_ratio=4.0,
+            qkv_bias=True,
+            hidden_dropout_prob=0.0,
+            attention_probs_dropout_prob=0.0,
+            drop_path_rate=0.1,
+            hidden_act="gelu",
+            use_absolute_embeddings=False,
+            initializer_range=0.02,
+            layer_norm_eps=1e-5,
+            **kwargs,
     ):
         super().__init__()
 
@@ -235,16 +235,16 @@ class DonutSwinEmbeddings(nn.Module):
 
 class MyConv2d(nn.Conv2d):
     def __init__(
-        self,
-        in_channel,
-        out_channels,
-        kernel_size,
-        stride=1,
-        padding="SAME",
-        dilation=1,
-        groups=1,
-        bias_attr=False,
-        eps=1e-6,
+            self,
+            in_channel,
+            out_channels,
+            kernel_size,
+            stride=1,
+            padding="SAME",
+            dilation=1,
+            groups=1,
+            bias_attr=False,
+            eps=1e-6,
     ):
         super().__init__(
             in_channel,
@@ -309,7 +309,7 @@ class DonutSwinPatchEmbeddings(nn.Module):
             else (patch_size, patch_size)
         )
         num_patches = (image_size[1] // patch_size[1]) * (
-            image_size[0] // patch_size[0]
+                image_size[0] // patch_size[0]
         )
         self.image_size = image_size
         self.patch_size = patch_size
@@ -368,11 +368,11 @@ class DonutSwinPatchMerging(nn.Module):
     """
 
     def __init__(
-        self,
-        input_resolution: Tuple[int],
-        dim: int,
-        norm_layer: nn.Module = nn.LayerNorm,
-        is_export=False,
+            self,
+            input_resolution: Tuple[int],
+            dim: int,
+            norm_layer: nn.Module = nn.LayerNorm,
+            is_export=False,
     ):
         super().__init__()
         self.input_resolution = input_resolution
@@ -392,7 +392,7 @@ class DonutSwinPatchMerging(nn.Module):
         return input_feature
 
     def forward(
-        self, input_feature: torch.Tensor, input_dimensions: Tuple[int, int]
+            self, input_feature: torch.Tensor, input_dimensions: Tuple[int, int]
     ) -> torch.Tensor:
         height, width = input_dimensions
         batch_size, dim, num_channels = input_feature.shape
@@ -419,13 +419,13 @@ class DonutSwinPatchMerging(nn.Module):
 
 # Copied from transformers.models.beit.modeling_beit.drop_path
 def drop_path(
-    input: torch.Tensor, drop_prob: float = 0.0, training: bool = False
+        input: torch.Tensor, drop_prob: float = 0.0, training: bool = False
 ) -> torch.Tensor:
     if drop_prob == 0.0 or not training:
         return input
     keep_prob = 1 - drop_prob
     shape = (input.shape[0],) + (1,) * (
-        input.ndim - 1
+            input.ndim - 1
     )  # work with diff dim tensors, not just 2D ConvNets
     random_tensor = keep_prob + torch.rand(
         shape,
@@ -513,11 +513,11 @@ class DonutSwinSelfAttention(nn.Module):
         return x.transpose([0, 2, 1, 3])
 
     def forward(
-        self,
-        hidden_states: torch.Tensor,
-        attention_mask=None,
-        head_mask=None,
-        output_attentions=False,
+            self,
+            hidden_states: torch.Tensor,
+            attention_mask=None,
+            head_mask=None,
+            output_attentions=False,
     ) -> Tuple[torch.Tensor]:
         batch_size, dim, num_channels = hidden_states.shape
         mixed_query_layer = self.query(hidden_states)
@@ -594,7 +594,7 @@ class DonutSwinSelfOutput(nn.Module):
         self.dropout = nn.Dropout(config.attention_probs_dropout_prob)
 
     def forward(
-        self, hidden_states: torch.Tensor, input_tensor: torch.Tensor
+            self, hidden_states: torch.Tensor, input_tensor: torch.Tensor
     ) -> torch.Tensor:
         hidden_states = self.dense(hidden_states)
         hidden_states = self.dropout(hidden_states)
@@ -611,19 +611,19 @@ class DonutSwinAttention(nn.Module):
         self.pruned_heads = set()
 
     def forward(
-        self,
-        hidden_states: torch.Tensor,
-        attention_mask=None,
-        head_mask=None,
-        output_attentions=False,
+            self,
+            hidden_states: torch.Tensor,
+            attention_mask=None,
+            head_mask=None,
+            output_attentions=False,
     ) -> Tuple[torch.Tensor]:
         self_outputs = self.self(
             hidden_states, attention_mask, head_mask, output_attentions
         )
         attention_output = self.output(self_outputs[0], hidden_states)
         outputs = (attention_output,) + self_outputs[
-            1:
-        ]  # add attentions if we output them
+                                        1:
+                                        ]  # add attentions if we output them
         return outputs
 
 
@@ -755,12 +755,12 @@ class DonutSwinLayer(nn.Module):
         return hidden_states, pad_values
 
     def forward(
-        self,
-        hidden_states: torch.Tensor,
-        input_dimensions: Tuple[int, int],
-        head_mask=None,
-        output_attentions=False,
-        always_partition=False,
+            self,
+            hidden_states: torch.Tensor,
+            input_dimensions: Tuple[int, int],
+            head_mask=None,
+            output_attentions=False,
+            always_partition=False,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         if not always_partition:
             self.set_shift_and_window_size(input_dimensions)
@@ -846,7 +846,7 @@ class DonutSwinLayer(nn.Module):
 # Copied from transformers.models.swin.modeling_swin.SwinStage with Swin->DonutSwin
 class DonutSwinStage(nn.Module):
     def __init__(
-        self, config, dim, input_resolution, depth, num_heads, drop_path, downsample
+            self, config, dim, input_resolution, depth, num_heads, drop_path, downsample
     ):
         super().__init__()
         self.config = config
@@ -879,12 +879,12 @@ class DonutSwinStage(nn.Module):
         self.pointing = False
 
     def forward(
-        self,
-        hidden_states: torch.Tensor,
-        input_dimensions: Tuple[int, int],
-        head_mask=None,
-        output_attentions=False,
-        always_partition=False,
+            self,
+            hidden_states: torch.Tensor,
+            input_dimensions: Tuple[int, int],
+            head_mask=None,
+            output_attentions=False,
+            always_partition=False,
     ) -> Tuple[torch.Tensor]:
         height, width = input_dimensions
 
@@ -936,16 +936,16 @@ class DonutSwinEncoder(nn.Module):
             [
                 DonutSwinStage(
                     config=config,
-                    dim=int(config.embed_dim * 2**i_layer),
+                    dim=int(config.embed_dim * 2 ** i_layer),
                     input_resolution=(
-                        grid_size[0] // (2**i_layer),
-                        grid_size[1] // (2**i_layer),
+                        grid_size[0] // (2 ** i_layer),
+                        grid_size[1] // (2 ** i_layer),
                     ),
                     depth=config.depths[i_layer],
                     num_heads=config.num_heads[i_layer],
                     drop_path=dpr[
-                        sum(config.depths[:i_layer]) : sum(config.depths[: i_layer + 1])
-                    ],
+                              sum(config.depths[:i_layer]): sum(config.depths[: i_layer + 1])
+                              ],
                     downsample=(
                         DonutSwinPatchMerging
                         if (i_layer < self.num_layers - 1)
@@ -959,15 +959,15 @@ class DonutSwinEncoder(nn.Module):
         self.gradient_checkpointing = False
 
     def forward(
-        self,
-        hidden_states: torch.Tensor,
-        input_dimensions: Tuple[int, int],
-        head_mask=None,
-        output_attentions=False,
-        output_hidden_states=False,
-        output_hidden_states_before_downsampling=False,
-        always_partition=False,
-        return_dict=True,
+            self,
+            hidden_states: torch.Tensor,
+            input_dimensions: Tuple[int, int],
+            head_mask=None,
+            output_attentions=False,
+            output_hidden_states=False,
+            output_hidden_states_before_downsampling=False,
+            always_partition=False,
+            return_dict=True,
     ):
         all_hidden_states = () if output_hidden_states else None
         all_reshaped_hidden_states = () if output_hidden_states else None
@@ -1095,14 +1095,14 @@ class DonutSwinPreTrainedModel(nn.Module):
 
 class DonutSwinModel(DonutSwinPreTrainedModel):
     def __init__(
-        self,
-        in_channels=3,
-        hidden_size=1024,
-        num_layers=4,
-        num_heads=[4, 8, 16, 32],
-        add_pooling_layer=True,
-        use_mask_token=False,
-        is_export=False,
+            self,
+            in_channels=3,
+            hidden_size=1024,
+            num_layers=4,
+            num_heads=[4, 8, 16, 32],
+            add_pooling_layer=True,
+            use_mask_token=False,
+            is_export=False,
     ):
         super().__init__()
         donut_swin_config = {
@@ -1200,13 +1200,13 @@ class DonutSwinModel(DonutSwinPreTrainedModel):
         return self.embeddings.patch_embeddings
 
     def forward(
-        self,
-        input_data=None,
-        bool_masked_pos=None,
-        head_mask=None,
-        output_attentions=None,
-        output_hidden_states=None,
-        return_dict=None,
+            self,
+            input_data=None,
+            bool_masked_pos=None,
+            head_mask=None,
+            output_attentions=None,
+            output_hidden_states=None,
+            return_dict=None,
     ) -> Union[Tuple, DonutSwinModelOutput]:
         r"""
         bool_masked_pos (`paddle.BoolTensor` of shape `(batch_size, num_patches)`):

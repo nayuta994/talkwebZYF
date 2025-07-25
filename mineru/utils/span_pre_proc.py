@@ -72,8 +72,8 @@ def remove_overlaps_low_confidence_spans(spans):
                         else:
                             span_need_remove = span2
                         if (
-                            span_need_remove is not None
-                            and span_need_remove not in dropped_spans
+                                span_need_remove is not None
+                                and span_need_remove not in dropped_spans
                         ):
                             dropped_spans.append(span_need_remove)
 
@@ -112,6 +112,7 @@ def __replace_ligatures(text: str):
     }
     return re.sub('|'.join(map(re.escape, ligatures.keys())), lambda m: ligatures[m.group()], text)
 
+
 def __replace_unicode(text: str):
     ligatures = {
         '\r\n': '', '\u0002': '-',
@@ -120,8 +121,9 @@ def __replace_unicode(text: str):
 
 
 """pdf_text dict方案 char级别"""
-def txt_spans_extract(pdf_page, spans, pil_img, scale, all_bboxes, all_discarded_blocks):
 
+
+def txt_spans_extract(pdf_page, spans, pil_img, scale, all_bboxes, all_discarded_blocks):
     page_dict = get_page(pdf_page)
 
     page_all_chars = []
@@ -244,10 +246,14 @@ def fill_char_in_spans(spans, all_chars, median_span_height):
     return need_ocr_spans
 
 
-LINE_STOP_FLAG = ('.', '!', '?', '。', '！', '？', ')', '）', '"', '”', ':', '：', ';', '；', ']', '】', '}', '}', '>', '》', '、', ',', '，', '-', '—', '–',)
+LINE_STOP_FLAG = (
+'.', '!', '?', '。', '！', '？', ')', '）', '"', '”', ':', '：', ';', '；', ']', '】', '}', '}', '>', '》', '、', ',', '，', '-',
+'—', '–',)
 LINE_START_FLAG = ('(', '（', '"', '“', '【', '{', '《', '<', '「', '『', '【', '[',)
 
 Span_Height_Radio = 0.33  # 字符的中轴和span的中轴高度差不能超过1/3span高度
+
+
 def calculate_char_in_span(char_bbox, span_bbox, char, span_height_radio=Span_Height_Radio):
     char_center_x = (char_bbox[0] + char_bbox[2]) / 2
     char_center_y = (char_bbox[1] + char_bbox[3]) / 2
@@ -255,9 +261,10 @@ def calculate_char_in_span(char_bbox, span_bbox, char, span_height_radio=Span_He
     span_height = span_bbox[3] - span_bbox[1]
 
     if (
-        span_bbox[0] < char_center_x < span_bbox[2]
-        and span_bbox[1] < char_center_y < span_bbox[3]
-        and abs(char_center_y - span_center_y) < span_height * span_height_radio  # 字符的中轴和span的中轴高度差不能超过Span_Height_Radio
+            span_bbox[0] < char_center_x < span_bbox[2]
+            and span_bbox[1] < char_center_y < span_bbox[3]
+            and abs(char_center_y - span_center_y) < span_height * span_height_radio
+    # 字符的中轴和span的中轴高度差不能超过Span_Height_Radio
     ):
         return True
     else:
@@ -265,18 +272,18 @@ def calculate_char_in_span(char_bbox, span_bbox, char, span_height_radio=Span_He
         # 主要是给结尾符号一个进入span的机会，这个char还应该离span右边界较近
         if char in LINE_STOP_FLAG:
             if (
-                (span_bbox[2] - span_height) < char_bbox[0] < span_bbox[2]
-                and char_center_x > span_bbox[0]
-                and span_bbox[1] < char_center_y < span_bbox[3]
-                and abs(char_center_y - span_center_y) < span_height * span_height_radio
+                    (span_bbox[2] - span_height) < char_bbox[0] < span_bbox[2]
+                    and char_center_x > span_bbox[0]
+                    and span_bbox[1] < char_center_y < span_bbox[3]
+                    and abs(char_center_y - span_center_y) < span_height * span_height_radio
             ):
                 return True
         elif char in LINE_START_FLAG:
             if (
-                span_bbox[0] < char_bbox[2] < (span_bbox[0] + span_height)
-                and char_center_x < span_bbox[2]
-                and span_bbox[1] < char_center_y < span_bbox[3]
-                and abs(char_center_y - span_center_y) < span_height * span_height_radio
+                    span_bbox[0] < char_bbox[2] < (span_bbox[0] + span_height)
+                    and char_center_x < span_bbox[2]
+                    and span_bbox[1] < char_center_y < span_bbox[3]
+                    and abs(char_center_y - span_center_y) < span_height * span_height_radio
             ):
                 return True
         else:
@@ -301,8 +308,10 @@ def chars_to_content(span):
 
             # 如果下一个char的x0和上一个char的x1距离超过0.25个字符宽度，则需要在中间插入一个空格
             char1 = char
-            char2 = span['chars'][span['chars'].index(char) + 1] if span['chars'].index(char) + 1 < len(span['chars']) else None
-            if char2 and char2['bbox'][0] - char1['bbox'][2] > median_width * 0.25 and char['char'] != ' ' and char2['char'] != ' ':
+            char2 = span['chars'][span['chars'].index(char) + 1] if span['chars'].index(char) + 1 < len(
+                span['chars']) else None
+            if char2 and char2['bbox'][0] - char1['bbox'][2] > median_width * 0.25 and char['char'] != ' ' and char2[
+                'char'] != ' ':
                 content += f"{char['char']} "
             else:
                 content += char['char']

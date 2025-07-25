@@ -14,7 +14,7 @@ def load_resource(uri: str) -> bytes:
         response = httpx.get(uri, timeout=_timeout)
         return response.content
     if uri.startswith("file://"):
-        with open(uri[len("file://") :], "rb") as file:
+        with open(uri[len("file://"):], "rb") as file:
             return file.read()
     if uri.lower().endswith(_file_exts):
         with open(uri, "rb") as file:
@@ -30,7 +30,7 @@ async def aio_load_resource(uri: str) -> bytes:
             response = await client.get(uri)
             return response.content
     if uri.startswith("file://"):
-        with open(uri[len("file://") :], "rb") as file:
+        with open(uri[len("file://"):], "rb") as file:
             return file.read()
     if uri.lower().endswith(_file_exts):
         with open(uri, "rb") as file:

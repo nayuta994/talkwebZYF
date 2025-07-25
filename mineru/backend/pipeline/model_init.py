@@ -43,6 +43,7 @@ def doclayout_yolo_model_init(weight, device='cpu'):
     model = DocLayoutYOLOModel(weight, device)
     return model
 
+
 def ocr_model_init(det_db_box_thresh=0.3,
                    lang=None,
                    use_dilation=True,
@@ -88,6 +89,7 @@ class AtomModelSingleton:
         if key not in self._models:
             self._models[key] = atom_model_init(model_name=atom_model_name, **kwargs)
         return self._models[key]
+
 
 def atom_model_init(model_name: str, **kwargs):
     atom_model = None
@@ -150,7 +152,8 @@ class MineruPipelineModel:
             )
 
             # 初始化公式解析模型
-            mfr_weight_dir = os.path.join(auto_download_and_get_model_root_path(ModelPath.unimernet_small), ModelPath.unimernet_small)
+            mfr_weight_dir = os.path.join(auto_download_and_get_model_root_path(ModelPath.unimernet_small),
+                                          ModelPath.unimernet_small)
 
             self.mfr_model = atom_model_manager.get_atom_model(
                 atom_model_name=AtomicModel.MFR,

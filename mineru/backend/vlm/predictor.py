@@ -36,18 +36,18 @@ except Exception as e:
 
 
 def get_predictor(
-    backend: str = "sglang-client",
-    model_path: str | None = None,
-    server_url: str | None = None,
-    temperature: float = DEFAULT_TEMPERATURE,
-    top_p: float = DEFAULT_TOP_P,
-    top_k: int = DEFAULT_TOP_K,
-    repetition_penalty: float = DEFAULT_REPETITION_PENALTY,
-    presence_penalty: float = DEFAULT_PRESENCE_PENALTY,
-    no_repeat_ngram_size: int = DEFAULT_NO_REPEAT_NGRAM_SIZE,
-    max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
-    http_timeout: int = 600,
-    **kwargs,
+        backend: str = "sglang-client",
+        model_path: str | None = None,
+        server_url: str | None = None,
+        temperature: float = DEFAULT_TEMPERATURE,
+        top_p: float = DEFAULT_TOP_P,
+        top_k: int = DEFAULT_TOP_K,
+        repetition_penalty: float = DEFAULT_REPETITION_PENALTY,
+        presence_penalty: float = DEFAULT_PRESENCE_PENALTY,
+        no_repeat_ngram_size: int = DEFAULT_NO_REPEAT_NGRAM_SIZE,
+        max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
+        http_timeout: int = 600,
+        **kwargs,
 ) -> BasePredictor:
     start_time = time.time()
 

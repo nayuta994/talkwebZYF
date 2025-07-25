@@ -74,7 +74,7 @@ class Mineru2LogitProcessor(CustomLogitProcessor):
             self._generated_ngrams[rid][prev_ngram] = self._generated_ngrams[rid].get(prev_ngram, []) + [last_token]
 
             # Get the next-token candidates to ban based on current prefix
-            current_prefix = tuple(output_ids[-ngram_size + 1 :])
+            current_prefix = tuple(output_ids[-ngram_size + 1:])
             banned_tokens = self._generated_ngrams[rid].get(current_prefix, [])
 
             # Set the logits of banned tokens to negative infinity

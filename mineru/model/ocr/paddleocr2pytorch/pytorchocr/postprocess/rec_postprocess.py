@@ -100,14 +100,14 @@ class BaseRecLabelDecode(object):
                 c_state = "splitter"
 
             if (
-                char == "."
-                and state == "en&num"
-                and c_i + 1 < len(text)
-                and bool(re.search("[0-9]", text[c_i + 1]))
+                    char == "."
+                    and state == "en&num"
+                    and c_i + 1 < len(text)
+                    and bool(re.search("[0-9]", text[c_i + 1]))
             ):  # grouping floating number
                 c_state = "en&num"
             if (
-                char == "-" and state == "en&num"
+                    char == "-" and state == "en&num"
             ):  # grouping word with '-', such as 'state-of-the-art'
                 c_state = "en&num"
 
@@ -154,10 +154,10 @@ class BaseRecLabelDecode(object):
                 if is_remove_duplicate:
                     # only for predict
                     if idx > 0 and text_index[batch_idx][idx - 1] == text_index[
-                            batch_idx][idx]:
+                        batch_idx][idx]:
                         continue
                 char_list.append(self.character[int(text_index[batch_idx][
-                    idx])])
+                                                        idx])])
                 if text_prob is not None:
                     conf_list.append(text_prob[batch_idx][idx])
                 else:
@@ -270,6 +270,7 @@ class NRTRLabelDecode(BaseRecLabelDecode):
             result_list.append((text.lower(), np.mean(conf_list).tolist()))
         return result_list
 
+
 class ViTSTRLabelDecode(NRTRLabelDecode):
     """ Convert between text-label and text-index """
 
@@ -330,10 +331,10 @@ class AttnLabelDecode(BaseRecLabelDecode):
                 if is_remove_duplicate:
                     # only for predict
                     if idx > 0 and text_index[batch_idx][idx - 1] == text_index[
-                            batch_idx][idx]:
+                        batch_idx][idx]:
                         continue
                 char_list.append(self.character[int(text_index[batch_idx][
-                    idx])])
+                                                        idx])])
                 if text_prob is not None:
                     conf_list.append(text_prob[batch_idx][idx])
                 else:
@@ -410,10 +411,10 @@ class RFLLabelDecode(BaseRecLabelDecode):
                 if is_remove_duplicate:
                     # only for predict
                     if idx > 0 and text_index[batch_idx][idx - 1] == text_index[
-                            batch_idx][idx]:
+                        batch_idx][idx]:
                         continue
                 char_list.append(self.character[int(text_index[batch_idx][
-                    idx])])
+                                                        idx])])
                 if text_prob is not None:
                     conf_list.append(text_prob[batch_idx][idx])
                 else:
@@ -515,10 +516,10 @@ class SRNLabelDecode(BaseRecLabelDecode):
                 if is_remove_duplicate:
                     # only for predict
                     if idx > 0 and text_index[batch_idx][idx - 1] == text_index[
-                            batch_idx][idx]:
+                        batch_idx][idx]:
                         continue
                 char_list.append(self.character[int(text_index[batch_idx][
-                    idx])])
+                                                        idx])])
                 if text_prob is not None:
                     conf_list.append(text_prob[batch_idx][idx])
                 else:
@@ -593,9 +594,9 @@ class TableLabelDecode(object):
     def __call__(self, preds):
         structure_probs = preds['structure_probs']
         loc_preds = preds['loc_preds']
-        if isinstance(structure_probs,torch.Tensor):
+        if isinstance(structure_probs, torch.Tensor):
             structure_probs = structure_probs.numpy()
-        if isinstance(loc_preds,torch.Tensor):
+        if isinstance(loc_preds, torch.Tensor):
             loc_preds = loc_preds.numpy()
         structure_idx = structure_probs.argmax(axis=2)
         structure_probs = structure_probs.max(axis=2)
@@ -616,7 +617,7 @@ class TableLabelDecode(object):
             res_html_code_list.append(res_html_code)
             res_loc_list.append(res_loc)
         return {'res_html_code': res_html_code_list, 'res_loc': res_loc_list, 'res_score_list': result_score_list,
-                'res_elem_idx_list': result_elem_idx_list,'structure_str_list':structure_str}
+                'res_elem_idx_list': result_elem_idx_list, 'structure_str_list': structure_str}
 
     def decode(self, text_index, structure_probs, char_or_elem):
         """convert text-label into text-index.
@@ -726,10 +727,10 @@ class SARLabelDecode(BaseRecLabelDecode):
                 if is_remove_duplicate:
                     # only for predict
                     if idx > 0 and text_index[batch_idx][idx - 1] == text_index[
-                            batch_idx][idx]:
+                        batch_idx][idx]:
                         continue
                 char_list.append(self.character[int(text_index[batch_idx][
-                    idx])])
+                                                        idx])])
                 if text_prob is not None:
                     conf_list.append(text_prob[batch_idx][idx])
                 else:

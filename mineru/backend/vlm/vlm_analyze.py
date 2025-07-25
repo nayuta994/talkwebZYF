@@ -21,16 +21,16 @@ class ModelSingleton:
         return cls._instance
 
     def get_model(
-        self,
-        backend: str,
-        model_path: str | None,
-        server_url: str | None,
-        **kwargs,
+            self,
+            backend: str,
+            model_path: str | None,
+            server_url: str | None,
+            **kwargs,
     ) -> BasePredictor:
         key = (backend, model_path, server_url)
         if key not in self._models:
             if backend in ['transformers', 'sglang-engine'] and not model_path:
-                model_path = auto_download_and_get_model_root_path("/","vlm")
+                model_path = auto_download_and_get_model_root_path("/", "vlm")
             self._models[key] = get_predictor(
                 backend=backend,
                 model_path=model_path,
@@ -41,13 +41,13 @@ class ModelSingleton:
 
 
 def doc_analyze(
-    pdf_bytes,
-    image_writer: DataWriter | None,
-    predictor: BasePredictor | None = None,
-    backend="transformers",
-    model_path: str | None = None,
-    server_url: str | None = None,
-    **kwargs,
+        pdf_bytes,
+        image_writer: DataWriter | None,
+        predictor: BasePredictor | None = None,
+        backend="transformers",
+        model_path: str | None = None,
+        server_url: str | None = None,
+        **kwargs,
 ):
     if predictor is None:
         predictor = ModelSingleton().get_model(backend, model_path, server_url, **kwargs)
@@ -68,13 +68,13 @@ def doc_analyze(
 
 
 async def aio_doc_analyze(
-    pdf_bytes,
-    image_writer: DataWriter | None,
-    predictor: BasePredictor | None = None,
-    backend="transformers",
-    model_path: str | None = None,
-    server_url: str | None = None,
-    **kwargs,
+        pdf_bytes,
+        image_writer: DataWriter | None,
+        predictor: BasePredictor | None = None,
+        backend="transformers",
+        model_path: str | None = None,
+        server_url: str | None = None,
+        **kwargs,
 ):
     if predictor is None:
         predictor = ModelSingleton().get_model(backend, model_path, server_url, **kwargs)

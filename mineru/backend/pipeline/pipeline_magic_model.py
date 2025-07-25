@@ -4,6 +4,7 @@ from mineru.utils.enum_class import CategoryId, ContentType
 
 class MagicModel:
     """每个函数没有得到元素的时候返回空list."""
+
     def __init__(self, page_model_info: dict, scale: float):
         self.__page_model_info = page_model_info
         self.__scale = scale
@@ -69,7 +70,6 @@ class MagicModel:
             if need_remove in layout_dets:
                 layout_dets.remove(need_remove)
 
-
     def __fix_axis(self):
         need_remove_list = []
         layout_dets = self.__page_model_info['layout_dets']
@@ -103,17 +103,17 @@ class MagicModel:
         need_remove_list = []
         layout_dets = list(filter(
             lambda x: x['category_id'] in [
-                    CategoryId.Title,
-                    CategoryId.Text,
-                    CategoryId.ImageBody,
-                    CategoryId.ImageCaption,
-                    CategoryId.TableBody,
-                    CategoryId.TableCaption,
-                    CategoryId.TableFootnote,
-                    CategoryId.InterlineEquation_Layout,
-                    CategoryId.InterlineEquationNumber_Layout,
-                ], self.__page_model_info['layout_dets']
-            )
+                CategoryId.Title,
+                CategoryId.Text,
+                CategoryId.ImageBody,
+                CategoryId.ImageCaption,
+                CategoryId.TableBody,
+                CategoryId.TableCaption,
+                CategoryId.TableFootnote,
+                CategoryId.InterlineEquation_Layout,
+                CategoryId.InterlineEquationNumber_Layout,
+            ], self.__page_model_info['layout_dets']
+        )
         )
         for i in range(len(layout_dets)):
             for j in range(i + 1, len(layout_dets)):
@@ -220,9 +220,9 @@ class MagicModel:
         return [bboxes[i] for i in range(N) if keep[i]]
 
     def __tie_up_category_by_distance_v3(
-        self,
-        subject_category_id: int,
-        object_category_id: int,
+            self,
+            subject_category_id: int,
+            object_category_id: int,
     ):
         subjects = self.__reduct_overlap(
             list(
@@ -255,7 +255,8 @@ class MagicModel:
         OBJ_IDX_OFFSET = 10000
         SUB_BIT_KIND, OBJ_BIT_KIND = 0, 1
 
-        all_boxes_with_idx = [(i, SUB_BIT_KIND, sub['bbox'][0], sub['bbox'][1]) for i, sub in enumerate(subjects)] + [(i + OBJ_IDX_OFFSET , OBJ_BIT_KIND, obj['bbox'][0], obj['bbox'][1]) for i, obj in enumerate(objects)]
+        all_boxes_with_idx = [(i, SUB_BIT_KIND, sub['bbox'][0], sub['bbox'][1]) for i, sub in enumerate(subjects)] + [
+            (i + OBJ_IDX_OFFSET, OBJ_BIT_KIND, obj['bbox'][0], obj['bbox'][1]) for i, obj in enumerate(objects)]
         seen_idx = set()
         seen_sub_idx = set()
 
@@ -269,13 +270,12 @@ class MagicModel:
             if len(candidates) == 0:
                 break
             left_x = min([v[2] for v in candidates])
-            top_y =  min([v[3] for v in candidates])
+            top_y = min([v[3] for v in candidates])
 
-            candidates.sort(key=lambda x: (x[2]-left_x) ** 2 + (x[3] - top_y) ** 2)
-
+            candidates.sort(key=lambda x: (x[2] - left_x) ** 2 + (x[3] - top_y) ** 2)
 
             fst_idx, fst_kind, left_x, top_y = candidates[0]
-            candidates.sort(key=lambda x: (x[2] - left_x) ** 2 + (x[3] - top_y)**2)
+            candidates.sort(key=lambda x: (x[2] - left_x) ** 2 + (x[3] - top_y) ** 2)
             nxt = None
 
             for i in range(1, len(candidates)):
@@ -294,10 +294,10 @@ class MagicModel:
             pair_dis = bbox_distance(subjects[sub_idx]['bbox'], objects[obj_idx]['bbox'])
             nearest_dis = float('inf')
             for i in range(N):
-                if i in seen_idx or i == sub_idx:continue
+                if i in seen_idx or i == sub_idx: continue
                 nearest_dis = min(nearest_dis, bbox_distance(subjects[i]['bbox'], objects[obj_idx]['bbox']))
 
-            if pair_dis >= 3*nearest_dis:
+            if pair_dis >= 3 * nearest_dis:
                 seen_idx.add(sub_idx)
                 continue
 
@@ -353,7 +353,6 @@ class MagicModel:
                 seen_sub_idx.add(k)
                 seen_idx.add(k)
 
-
         for i in range(len(subjects)):
             if i in seen_sub_idx:
                 continue
@@ -367,7 +366,6 @@ class MagicModel:
                     'sub_idx': i,
                 }
             )
-
 
         return ret
 
@@ -480,7 +478,7 @@ class MagicModel:
         return remove_duplicate_spans(all_spans)
 
     def __get_blocks_by_type(
-        self, category_type: int, extra_col=None
+            self, category_type: int, extra_col=None
     ) -> list:
         if extra_col is None:
             extra_col = []

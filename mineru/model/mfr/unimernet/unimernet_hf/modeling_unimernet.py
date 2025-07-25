@@ -64,6 +64,7 @@ LEFT_COUNT_PATTERN = re.compile(r'\\left(?![a-zA-Z])')
 RIGHT_COUNT_PATTERN = re.compile(r'\\right(?![a-zA-Z])')
 LEFT_RIGHT_REMOVE_PATTERN = re.compile(r'\\left\.?|\\right\.?')
 
+
 def fix_latex_left_right(s):
     """
     修复LaTeX中的\\left和\\right命令
@@ -299,12 +300,14 @@ def process_latex(input_string):
 
     return re.sub(pattern, replace_func, input_string)
 
+
 # 常见的在KaTeX/MathJax中可用的数学环境
 ENV_TYPES = ['array', 'matrix', 'pmatrix', 'bmatrix', 'vmatrix',
              'Bmatrix', 'Vmatrix', 'cases', 'aligned', 'gathered']
 ENV_BEGIN_PATTERNS = {env: re.compile(r'\\begin\{' + env + r'\}') for env in ENV_TYPES}
 ENV_END_PATTERNS = {env: re.compile(r'\\end\{' + env + r'\}') for env in ENV_TYPES}
 ENV_FORMAT_PATTERNS = {env: re.compile(r'\\begin\{' + env + r'\}\{([^}]*)\}') for env in ENV_TYPES}
+
 
 def fix_latex_environments(s):
     """
@@ -353,6 +356,7 @@ REPLACEMENTS_PATTERNS = {
 }
 QQUAD_PATTERN = re.compile(r'\\qquad(?!\s)')
 
+
 def latex_rm_whitespace(s: str):
     """Remove unnecessary whitespace from LaTeX code."""
     s = fix_unbalanced_braces(s)
@@ -384,10 +388,10 @@ def latex_rm_whitespace(s: str):
 
 class UnimernetModel(VisionEncoderDecoderModel):
     def __init__(
-        self,
-        config: Optional[PretrainedConfig] = None,
-        encoder: Optional[PreTrainedModel] = None,
-        decoder: Optional[PreTrainedModel] = None,
+            self,
+            config: Optional[PretrainedConfig] = None,
+            encoder: Optional[PreTrainedModel] = None,
+            decoder: Optional[PreTrainedModel] = None,
     ):
         # VisionEncoderDecoderModel's checking log has bug, disable for temp.
         base_model_logger.disabled = True
@@ -403,7 +407,7 @@ class UnimernetModel(VisionEncoderDecoderModel):
         self.transform = UnimerSwinImageProcessor()
         self.tokenizer = TokenizerWrapper(AutoTokenizer.from_pretrained(model_path))
         self._post_check()
-    
+
     def _post_check(self):
         tokenizer = self.tokenizer
 
@@ -419,7 +423,8 @@ class UnimernetModel(VisionEncoderDecoderModel):
         assert self.config.pad_token_id == tokenizer.pad_token_id
 
     @classmethod
-    def from_checkpoint(cls, model_path: str, model_filename: str = "pytorch_model.pth", state_dict_strip_prefix="model.model."):
+    def from_checkpoint(cls, model_path: str, model_filename: str = "pytorch_model.pth",
+                        state_dict_strip_prefix="model.model."):
         config = VisionEncoderDecoderConfig.from_pretrained(model_path)
         config._name_or_path = model_path
         config.encoder = UnimerSwinConfig(**vars(config.encoder))
@@ -473,15 +478,15 @@ class UnimernetModel(VisionEncoderDecoderModel):
         num_channels = pixel_values.shape[1]
         if num_channels == 1:
             pixel_values = pixel_values.repeat(1, 3, 1, 1)
-        
+
         kwargs = {}
         if do_sample:
             kwargs["temperature"] = temperature
             kwargs["top_p"] = top_p
-        
+
         outputs = super().generate(
             pixel_values=pixel_values,
-            max_new_tokens=self.tokenizer.tokenizer.model_max_length, # required
+            max_new_tokens=self.tokenizer.tokenizer.model_max_length,  # required
             decoder_start_token_id=self.tokenizer.tokenizer.bos_token_id,
             do_sample=do_sample,
             **kwargs,
@@ -492,4 +497,3 @@ class UnimernetModel(VisionEncoderDecoderModel):
         pred_str = self.tokenizer.token2str(outputs)
         fixed_str = [latex_rm_whitespace(s) for s in pred_str]
         return {"pred_ids": outputs, "pred_tokens": pred_tokens, "pred_str": pred_str, "fixed_str": fixed_str}
-

@@ -5,22 +5,22 @@ class Mineru2QwenConfig(Qwen2Config):
     model_type = "mineru2_qwen"
 
     def __init__(
-        self,
-        ignore_index=-100,
-        image_aspect_ratio="square_anyres_max_9",
-        image_grid_pinpoints="(1x1),...,(4x4)",
-        image_token_index=151646,
-        mm_hidden_size=1152,
-        mm_patch_merge_type="spatial_unpad",
-        mm_projector_type="mlp2x_gelu",
-        mm_vision_select_feature="full",
-        mm_vision_select_layer=-2,
-        mm_vision_tower="google/siglip-so400m-patch14-384",
-        tie_word_embeddings=False,
-        tokenizer_model_max_length=16384,
-        tokenizer_padding_side="right",
-        unfreeze_mm_vision_tower=True,
-        **kwargs,
+            self,
+            ignore_index=-100,
+            image_aspect_ratio="square_anyres_max_9",
+            image_grid_pinpoints="(1x1),...,(4x4)",
+            image_token_index=151646,
+            mm_hidden_size=1152,
+            mm_patch_merge_type="spatial_unpad",
+            mm_projector_type="mlp2x_gelu",
+            mm_vision_select_feature="full",
+            mm_vision_select_layer=-2,
+            mm_vision_tower="google/siglip-so400m-patch14-384",
+            tie_word_embeddings=False,
+            tokenizer_model_max_length=16384,
+            tokenizer_padding_side="right",
+            unfreeze_mm_vision_tower=True,
+            **kwargs,
     ):
         self.ignore_index = ignore_index
         self.image_aspect_ratio = image_aspect_ratio

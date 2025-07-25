@@ -7,12 +7,12 @@ from PIL import Image
 
 class DocLayoutYOLOModel:
     def __init__(
-        self,
-        weight: str,
-        device: str = "cuda",
-        imgsz: int = 1280,
-        conf: float = 0.1,
-        iou: float = 0.45,
+            self,
+            weight: str,
+            device: str = "cuda",
+            imgsz: int = 1280,
+            conf: float = 0.1,
+            iou: float = 0.45,
     ):
         self.model = YOLOv10(weight).to(device)
         self.device = device
@@ -28,9 +28,9 @@ class DocLayoutYOLOModel:
             return layout_res
 
         for xyxy, conf, cls in zip(
-            prediction.boxes.xyxy.cpu(),
-            prediction.boxes.conf.cpu(),
-            prediction.boxes.cls.cpu(),
+                prediction.boxes.xyxy.cpu(),
+                prediction.boxes.conf.cpu(),
+                prediction.boxes.cls.cpu(),
         ):
             coords = list(map(int, xyxy.tolist()))
             xmin, ymin, xmax, ymax = coords
@@ -52,9 +52,9 @@ class DocLayoutYOLOModel:
         return self._parse_prediction(prediction)
 
     def batch_predict(
-        self,
-        images: List[Union[np.ndarray, Image.Image]],
-        batch_size: int = 4
+            self,
+            images: List[Union[np.ndarray, Image.Image]],
+            batch_size: int = 4
     ) -> List[List[Dict]]:
         results = []
         with tqdm(total=len(images), desc="Layout Predict") as pbar:

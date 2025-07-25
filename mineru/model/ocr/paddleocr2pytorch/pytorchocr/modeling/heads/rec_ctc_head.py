@@ -4,13 +4,13 @@ from torch import nn
 
 class CTCHead(nn.Module):
     def __init__(
-        self,
-        in_channels,
-        out_channels=6625,
-        fc_decay=0.0004,
-        mid_channels=None,
-        return_feats=False,
-        **kwargs
+            self,
+            in_channels,
+            out_channels=6625,
+            fc_decay=0.0004,
+            mid_channels=None,
+            return_feats=False,
+            **kwargs
     ):
         super(CTCHead, self).__init__()
         if mid_channels is None:

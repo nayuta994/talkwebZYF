@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -20,7 +19,7 @@ def build_post_process(config, global_config=None):
         'DBPostProcess', 'CTCLabelDecode',
         'AttnLabelDecode', 'ClsPostProcess', 'SRNLabelDecode',
         'TableLabelDecode', 'NRTRLabelDecode', 'SARLabelDecode',
-        'ViTSTRLabelDecode','CANLabelDecode', 'RFLLabelDecode'
+        'ViTSTRLabelDecode', 'CANLabelDecode', 'RFLLabelDecode'
     ]
 
     config = copy.deepcopy(config)

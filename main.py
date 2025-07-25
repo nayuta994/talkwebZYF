@@ -6,9 +6,9 @@ from sql_query import query
 from user import User
 
 
-def main(user_inputs: str, user_file_path: str = 'inputs/Chapter2社会网络的基础知识.pdf', user_id: str = 'chatcmpl-dbb9df84524d44a6b4dac92235a922ac'):
+def main(user_inputs: str, user_file_path: str = 'inputs/Chapter2社会网络的基础知识.pdf', user_id: str = 'chatcmpl-dbb9df84524d44a6b4dac92235a922ac', is_file_analysis: bool = True):
 
-    user = User(user_id=user_id, file_path=user_file_path)
+    user = User(user_id=user_id, file_path=user_file_path, is_file_analysis=is_file_analysis)
     user.process_document()  # 处理文档
 
     model = MyLLM(user=user)
@@ -39,14 +39,15 @@ def main(user_inputs: str, user_file_path: str = 'inputs/Chapter2社会网络的
         "history": history,
         "input": user_inputs
     })
-    print(result)
+    # print(result)
+    return result
 
 
 if __name__ == '__main__':
     user_id = input("输入用户id：")
     user_inputs = input("输入问题：")
     user_file_path = input("输入附件路径：")
-    main(user_inputs=user_inputs)
+    print(main(user_inputs=user_inputs))
 
 
 

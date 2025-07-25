@@ -11,6 +11,7 @@ from sglang.srt.conversation import Conversation
 from mineru.utils.models_download_utils import auto_download_and_get_model_root_path
 from .logit_processor import Mineru2LogitProcessor
 
+
 # mineru2.0的chat_template与chatml在换行上有微小区别
 def custom_get_prompt(self) -> str:
     system_prompt = self.system_template.format(system_message=self.system_message)
@@ -25,6 +26,7 @@ def custom_get_prompt(self) -> str:
         else:
             ret += role + "\n"
     return ret
+
 
 _custom_logit_processor_str = Mineru2LogitProcessor().to_str()
 

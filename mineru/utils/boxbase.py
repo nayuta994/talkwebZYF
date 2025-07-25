@@ -7,10 +7,10 @@ def is_in(box1, box2) -> bool:
     x0_2, y0_2, x1_2, y1_2 = box2
 
     return (
-        x0_1 >= x0_2  # box1的左边界不在box2的左边外
-        and y0_1 >= y0_2  # box1的上边界不在box2的上边外
-        and x1_1 <= x1_2  # box1的右边界不在box2的右边外
-        and y1_1 <= y1_2
+            x0_1 >= x0_2  # box1的左边界不在box2的左边外
+            and y0_1 >= y0_2  # box1的上边界不在box2的上边外
+            and x1_1 <= x1_2  # box1的右边界不在box2的右边外
+            and y1_1 <= y1_2
     )  # box1的下边界不在box2的下边外
 
 

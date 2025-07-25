@@ -17,7 +17,9 @@ from mineru.backend.pipeline.model_json_to_middle_json import result_to_middle_j
 from mineru.backend.vlm.vlm_middle_json_mkcontent import union_make as vlm_union_make
 from mineru.utils.models_download_utils import auto_download_and_get_model_root_path
 
-
+"""
+原始MinerU解析pdf和图片的代码
+"""
 def do_parse(
     output_dir,  # Output directory for storing parsing results
     pdf_file_names: list[str],  # List of PDF file names to be parsed

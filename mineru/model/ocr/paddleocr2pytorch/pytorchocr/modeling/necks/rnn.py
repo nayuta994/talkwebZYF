@@ -31,6 +31,7 @@ class Im2Seq(nn.Module):
     #
     #     return x
 
+
 class EncoderWithRNN_(nn.Module):
     def __init__(self, in_channels, hidden_size):
         super(EncoderWithRNN_, self).__init__()
@@ -88,20 +89,20 @@ class EncoderWithFC(nn.Module):
 
 class EncoderWithSVTR(nn.Module):
     def __init__(
-        self,
-        in_channels,
-        dims=64,  # XS
-        depth=2,
-        hidden_dims=120,
-        use_guide=False,
-        num_heads=8,
-        qkv_bias=True,
-        mlp_ratio=2.0,
-        drop_rate=0.1,
-        kernel_size=[3, 3],
-        attn_drop_rate=0.1,
-        drop_path=0.0,
-        qk_scale=None,
+            self,
+            in_channels,
+            dims=64,  # XS
+            depth=2,
+            hidden_dims=120,
+            use_guide=False,
+            num_heads=8,
+            qkv_bias=True,
+            mlp_ratio=2.0,
+            drop_rate=0.1,
+            kernel_size=[3, 3],
+            attn_drop_rate=0.1,
+            drop_path=0.0,
+            qk_scale=None,
     ):
         super(EncoderWithSVTR, self).__init__()
         self.depth = depth

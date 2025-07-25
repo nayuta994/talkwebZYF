@@ -227,26 +227,26 @@ def latex_fix(latex):
     if left_count != right_count:
         for _ in range(2):
             # replace valid pairs
-            latex = re.sub(r'\\left\\\{', "{", latex) # \left\{
-            latex = re.sub(r"\\left\|", "|", latex) # \left|
-            latex = re.sub(r"\\left\\\|", "|", latex) # \left\|
-            latex = re.sub(r"\\left\(", "(", latex) # \left(
-            latex = re.sub(r"\\left\[", "[", latex) # \left[
+            latex = re.sub(r'\\left\\\{', "{", latex)  # \left\{
+            latex = re.sub(r"\\left\|", "|", latex)  # \left|
+            latex = re.sub(r"\\left\\\|", "|", latex)  # \left\|
+            latex = re.sub(r"\\left\(", "(", latex)  # \left(
+            latex = re.sub(r"\\left\[", "[", latex)  # \left[
 
-            latex = re.sub(r"\\right\\\}", "}", latex) # \right\}
-            latex = re.sub(r"\\right\|", "|", latex) # \right|
-            latex = re.sub(r"\\right\\\|", "|", latex) # \right\|
-            latex = re.sub(r"\\right\)", ")", latex) # \right)
-            latex = re.sub(r"\\right\]", "]", latex) # \right]
-            latex = re.sub(r"\\right\.", "", latex) # \right.
+            latex = re.sub(r"\\right\\\}", "}", latex)  # \right\}
+            latex = re.sub(r"\\right\|", "|", latex)  # \right|
+            latex = re.sub(r"\\right\\\|", "|", latex)  # \right\|
+            latex = re.sub(r"\\right\)", ")", latex)  # \right)
+            latex = re.sub(r"\\right\]", "]", latex)  # \right]
+            latex = re.sub(r"\\right\.", "", latex)  # \right.
 
             # replace invalid pairs first
             latex = re.sub(r'\\left\{', "{", latex)
-            latex = re.sub(r'\\right\}', "}", latex) # \left{ ... \right}
+            latex = re.sub(r'\\right\}', "}", latex)  # \left{ ... \right}
             latex = re.sub(r'\\left\\\(', "(", latex)
-            latex = re.sub(r'\\right\\\)', ")", latex) # \left\( ... \right\)
+            latex = re.sub(r'\\right\\\)', ")", latex)  # \left\( ... \right\)
             latex = re.sub(r'\\left\\\[', "[", latex)
-            latex = re.sub(r'\\right\\\]', "]", latex) # \left\[ ... \right\]
+            latex = re.sub(r'\\right\\\]', "]", latex)  # \left\[ ... \right\]
 
     return latex
 
@@ -264,9 +264,9 @@ def __reduct_overlap(bboxes):
 
 
 def __tie_up_category_by_distance_v3(
-    blocks: list,
-    subject_block_type: str,
-    object_block_type: str,
+        blocks: list,
+        subject_block_type: str,
+        object_block_type: str,
 ):
     subjects = __reduct_overlap(
         list(
@@ -359,7 +359,8 @@ def __tie_up_category_by_distance_v3(
                     "index": subjects[sub_idx]["index"],
                 },
                 "obj_bboxes": [
-                    {"bbox": objects[obj_idx]["bbox"], "lines": objects[obj_idx]["lines"], "index": objects[obj_idx]["index"]}
+                    {"bbox": objects[obj_idx]["bbox"], "lines": objects[obj_idx]["lines"],
+                     "index": objects[obj_idx]["index"]}
                 ],
                 "sub_idx": sub_idx,
             }
@@ -495,7 +496,7 @@ def fix_text_blocks(blocks):
     i = 0
     while i < len(blocks):
         block = blocks[i]
-        last_line = block["lines"][-1]if block["lines"] else None
+        last_line = block["lines"][-1] if block["lines"] else None
         if last_line:
             last_span = last_line["spans"][-1] if last_line["spans"] else None
             if last_span and last_span['content'].endswith('<|txt_contd|>'):

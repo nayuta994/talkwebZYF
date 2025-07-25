@@ -146,5 +146,6 @@ def download_models(model_source, model_type):
         logger.exception(f"An error occurred while downloading models: {str(e)}")
         sys.exit(1)
 
+
 if __name__ == '__main__':
     download_models()

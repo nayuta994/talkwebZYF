@@ -5,6 +5,7 @@ from modelscope import snapshot_download as ms_snapshot_download
 from mineru.utils.config_reader import get_local_models_dir
 from mineru.utils.enum_class import ModelPath
 
+
 def auto_download_and_get_model_root_path(relative_path: str, repo_mode='pipeline') -> str:
     """
     支持文件或目录的可靠下载。
@@ -43,7 +44,6 @@ def auto_download_and_get_model_root_path(relative_path: str, repo_mode='pipelin
     # 如果没有指定model_source或值不是'modelscope'，则使用默认值
     repo = repo_mapping[repo_mode].get(model_source, repo_mapping[repo_mode]['default'])
 
-
     if model_source == "huggingface":
         snapshot_download = hf_snapshot_download
     elif model_source == "modelscope":
@@ -55,14 +55,14 @@ def auto_download_and_get_model_root_path(relative_path: str, repo_mode='pipelin
 
     if repo_mode == 'pipeline':
         relative_path = relative_path.strip('/')
-        cache_dir = snapshot_download(repo, allow_patterns=[relative_path, relative_path+"/*"])
+        cache_dir = snapshot_download(repo, allow_patterns=[relative_path, relative_path + "/*"])
     elif repo_mode == 'vlm':
         # VLM 模式下，根据 relative_path 的不同处理方式
         if relative_path == "/":
             cache_dir = snapshot_download(repo)
         else:
             relative_path = relative_path.strip('/')
-            cache_dir = snapshot_download(repo, allow_patterns=[relative_path, relative_path+"/*"])
+            cache_dir = snapshot_download(repo, allow_patterns=[relative_path, relative_path + "/*"])
 
     if not cache_dir:
         raise FileNotFoundError(f"Failed to download model: {relative_path} from {repo}")

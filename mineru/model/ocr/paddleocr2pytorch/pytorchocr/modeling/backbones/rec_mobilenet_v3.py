@@ -5,13 +5,13 @@ from .det_mobilenet_v3 import ConvBNLayer, ResidualUnit, make_divisible
 
 class MobileNetV3(nn.Module):
     def __init__(
-        self,
-        in_channels=3,
-        model_name="small",
-        scale=0.5,
-        large_stride=None,
-        small_stride=None,
-        **kwargs
+            self,
+            in_channels=3,
+            model_name="small",
+            scale=0.5,
+            large_stride=None,
+            small_stride=None,
+            **kwargs
     ):
         super(MobileNetV3, self).__init__()
         if small_stride is None:
@@ -26,10 +26,10 @@ class MobileNetV3(nn.Module):
             small_stride, list
         ), "small_stride type must " "be list but got {}".format(type(small_stride))
         assert (
-            len(large_stride) == 4
+                len(large_stride) == 4
         ), "large_stride length must be " "4 but got {}".format(len(large_stride))
         assert (
-            len(small_stride) == 4
+                len(small_stride) == 4
         ), "small_stride length must be " "4 but got {}".format(len(small_stride))
 
         if model_name == "large":
@@ -75,7 +75,7 @@ class MobileNetV3(nn.Module):
 
         supported_scale = [0.35, 0.5, 0.75, 1.0, 1.25]
         assert (
-            scale in supported_scale
+                scale in supported_scale
         ), "supported scales are {} but input scale is {}".format(
             supported_scale, scale
         )

@@ -23,22 +23,22 @@ from .utils import load_resource
 
 class HuggingfacePredictor(BasePredictor):
     def __init__(
-        self,
-        model_path: str,
-        device_map="auto",
-        device="cuda",
-        torch_dtype="auto",
-        load_in_8bit=False,
-        load_in_4bit=False,
-        use_flash_attn=False,
-        temperature: float = DEFAULT_TEMPERATURE,
-        top_p: float = DEFAULT_TOP_P,
-        top_k: int = DEFAULT_TOP_K,
-        repetition_penalty: float = DEFAULT_REPETITION_PENALTY,
-        presence_penalty: float = DEFAULT_PRESENCE_PENALTY,
-        no_repeat_ngram_size: int = DEFAULT_NO_REPEAT_NGRAM_SIZE,
-        max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
-        **kwargs,
+            self,
+            model_path: str,
+            device_map="auto",
+            device="cuda",
+            torch_dtype="auto",
+            load_in_8bit=False,
+            load_in_4bit=False,
+            use_flash_attn=False,
+            temperature: float = DEFAULT_TEMPERATURE,
+            top_p: float = DEFAULT_TOP_P,
+            top_k: int = DEFAULT_TOP_K,
+            repetition_penalty: float = DEFAULT_REPETITION_PENALTY,
+            presence_penalty: float = DEFAULT_PRESENCE_PENALTY,
+            no_repeat_ngram_size: int = DEFAULT_NO_REPEAT_NGRAM_SIZE,
+            max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
+            **kwargs,
     ):
         super().__init__(
             temperature=temperature,
@@ -88,17 +88,17 @@ class HuggingfacePredictor(BasePredictor):
         self.eos_token_id = self.model.config.eos_token_id
 
     def predict(
-        self,
-        image: str | bytes,
-        prompt: str = "",
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        top_k: Optional[int] = None,
-        repetition_penalty: Optional[float] = None,
-        presence_penalty: Optional[float] = None,
-        no_repeat_ngram_size: Optional[int] = None,
-        max_new_tokens: Optional[int] = None,
-        **kwargs,
+            self,
+            image: str | bytes,
+            prompt: str = "",
+            temperature: Optional[float] = None,
+            top_p: Optional[float] = None,
+            top_k: Optional[int] = None,
+            repetition_penalty: Optional[float] = None,
+            presence_penalty: Optional[float] = None,
+            no_repeat_ngram_size: Optional[int] = None,
+            max_new_tokens: Optional[int] = None,
+            **kwargs,
     ) -> str:
         prompt = self.build_prompt(prompt)
 
@@ -162,17 +162,17 @@ class HuggingfacePredictor(BasePredictor):
         return output
 
     def batch_predict(
-        self,
-        images: List[str] | List[bytes],
-        prompts: Union[List[str], str] = "",
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        top_k: Optional[int] = None,
-        repetition_penalty: Optional[float] = None,
-        presence_penalty: Optional[float] = None,  # not supported by hf
-        no_repeat_ngram_size: Optional[int] = None,
-        max_new_tokens: Optional[int] = None,
-        **kwargs,
+            self,
+            images: List[str] | List[bytes],
+            prompts: Union[List[str], str] = "",
+            temperature: Optional[float] = None,
+            top_p: Optional[float] = None,
+            top_k: Optional[int] = None,
+            repetition_penalty: Optional[float] = None,
+            presence_penalty: Optional[float] = None,  # not supported by hf
+            no_repeat_ngram_size: Optional[int] = None,
+            max_new_tokens: Optional[int] = None,
+            **kwargs,
     ) -> List[str]:
         if not isinstance(prompts, list):
             prompts = [prompts] * len(images)
@@ -197,15 +197,15 @@ class HuggingfacePredictor(BasePredictor):
         return outputs
 
     def stream_predict(
-        self,
-        image: str | bytes,
-        prompt: str = "",
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        top_k: Optional[int] = None,
-        repetition_penalty: Optional[float] = None,
-        presence_penalty: Optional[float] = None,
-        no_repeat_ngram_size: Optional[int] = None,
-        max_new_tokens: Optional[int] = None,
+            self,
+            image: str | bytes,
+            prompt: str = "",
+            temperature: Optional[float] = None,
+            top_p: Optional[float] = None,
+            top_k: Optional[int] = None,
+            repetition_penalty: Optional[float] = None,
+            presence_penalty: Optional[float] = None,
+            no_repeat_ngram_size: Optional[int] = None,
+            max_new_tokens: Optional[int] = None,
     ) -> Iterable[str]:
         raise NotImplementedError("Streaming is not supported yet.")

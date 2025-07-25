@@ -8,6 +8,9 @@ from langchain_community.chat_message_histories import ChatMessageHistory
 
 import os
 
+from my_llm import MyLLM
+from user import User
+
 # openAI的API密钥
 # os.environ["OPENAI_API_KEY"] = 'sk-dkmqf2YVlfXMIvEgGNVyGzoAMi8RKwgen994HiX90bqGIsZF'
 # # 本地代理
@@ -31,109 +34,105 @@ import os
 # }
 # print(chain.invoke(messages))
 
-
-# model = ChatOpenAI(model="gpt-4o-mini")
-# template = [
-#     ('user', '{user}'),
-#     ('human', "给我一个关于{topic}的故事")
-# ]
-# prompt = ChatPromptTemplate.from_messages(template)
-# output_parser = StrOutputParser()
-# message = {
-#     'user':'老师',
-#     'topic':'猫和老鼠'
-# }
-# chain = prompt | model | output_parser
-# print(chain.invoke(message))
-
-os.environ["ZHIPUAI_API_KEY"] = "a7cef2e24ea7bbb175fd2e86e9030c11.ZSx6hlQiUJXFSQAu"
-model = ChatZhipuAI(model="glm-4-flash")
-
-# 创建一个来聊天提示词模板
-prompt = ChatPromptTemplate.from_messages(  # 注：from_messages不是from_template
-    [
-        (
-            "system",
-            "你是一个擅长{ability}的助手,使用{language}回答不超过50字"
-        ),
-        # MessagesPlaceholder 消息占位符--存放的是你的历史聊天记录 ， 作为占位
-        MessagesPlaceholder(variable_name='history'),
-        (
-            "human",
-            "{input}"
-        )
-    ]
-)
+user = User()
+model = MyLLM(user=user)
+prompt = ChatPromptTemplate.from_template("你是一个问答助手，请根据用户的问题做详细的解答。以下是用户的问题: {question}.")
 output_parser = StrOutputParser()
+message = {
+    'question': '你好'
+}
 chain = prompt | model | output_parser
+response = chain.invoke(message)
+print(response)
 
-store = {}
-# 定义一个通过session_id来获取会话记录的函数,得到的是一个ChatMessageHistory对象
-# def get_session_history(session_id: str):
-#     if session_id not in store:
-#         store[session_id] = ChatMessageHistory()  # 保存历史聊天记录
-#     return store[session_id]
-
-# 这里我们需要传递两个参数来获取历史记录
-def get_session_history(user_id: str, conversation_id: str) -> BaseChatMessageHistory:
-    if (user_id, conversation_id) not in store:
-        store[(user_id, conversation_id)] = ChatMessageHistory()
-    return store[(user_id, conversation_id)]
-
-with_message_history = RunnableWithMessageHistory(
-    chain,
-    get_session_history,
-    input_messages_key="input",
-    history_messages_key="history",
-    # 定义一些自定义的参数
-    history_factory_config=[
-        ConfigurableFieldSpec(
-            id="user_id",
-            annotation=str,
-            name="用户 ID",
-            description="用户的唯一标识符。",
-            default="",
-            is_shared=True,
-        ),
-        ConfigurableFieldSpec(
-            id="conversation_id",
-            annotation=str,
-            name="对话 ID",
-            description="对话的唯一标识符。",
-            default="",
-            is_shared=True,
-        ),
-    ],
-)
-# 创建一个带有历史会话记录的Runnable, 我们指定了 input_messages_key（要作为最新输入消息处理的键）和 history_messages_key（要添加历史消息的键）
+# os.environ["ZHIPUAI_API_KEY"] = "a7cef2e24ea7bbb175fd2e86e9030c11.ZSx6hlQiUJXFSQAu"
+# model = ChatZhipuAI(model="glm-4-flash")
+#
+# # 创建一个来聊天提示词模板
+# prompt = ChatPromptTemplate.from_messages(  # 注：from_messages不是from_template
+#     [
+#         (
+#             "system",
+#             "你是一个擅长{ability}的助手,使用{language}回答不超过50字"
+#         ),
+#         # MessagesPlaceholder 消息占位符--存放的是你的历史聊天记录 ， 作为占位
+#         MessagesPlaceholder(variable_name='history'),
+#         (
+#             "human",
+#             "{input}"
+#         )
+#     ]
+# )
+# output_parser = StrOutputParser()
+# chain = prompt | model | output_parser
+#
+# store = {}
+# # 定义一个通过session_id来获取会话记录的函数,得到的是一个ChatMessageHistory对象
+# # def get_session_history(session_id: str):
+# #     if session_id not in store:
+# #         store[session_id] = ChatMessageHistory()  # 保存历史聊天记录
+# #     return store[session_id]
+#
+# # 这里我们需要传递两个参数来获取历史记录
+# def get_session_history(user_id: str, conversation_id: str) -> BaseChatMessageHistory:
+#     if (user_id, conversation_id) not in store:
+#         store[(user_id, conversation_id)] = ChatMessageHistory()
+#     return store[(user_id, conversation_id)]
+#
 # with_message_history = RunnableWithMessageHistory(
 #     chain,
 #     get_session_history,
-#     input_messages_key='input',
-#     history_messages_key='history'
+#     input_messages_key="input",
+#     history_messages_key="history",
+#     # 定义一些自定义的参数
+#     history_factory_config=[
+#         ConfigurableFieldSpec(
+#             id="user_id",
+#             annotation=str,
+#             name="用户 ID",
+#             description="用户的唯一标识符。",
+#             default="",
+#             is_shared=True,
+#         ),
+#         ConfigurableFieldSpec(
+#             id="conversation_id",
+#             annotation=str,
+#             name="对话 ID",
+#             description="对话的唯一标识符。",
+#             default="",
+#             is_shared=True,
+#         ),
+#     ],
 # )
-# 调用带有历史会话记录的Runnable来执行任务 ， 其中我们需要传递本次会话需要的session_id值
-message1 = with_message_history.invoke(
-    input={"ability":"数学",'language':'中文',"input":"正弦函数是什么意思"},
-    config={"configurable" : { 'user_id':'1',"conversation_id" : "session01" }}
-)
-print(message1)
-message2 = with_message_history.invoke(
-    input={"ability":"语文",'language':'中文', "input":"先输出上一次回答的内容，然后根据上一次的回答写诗"},
-    config={"configurable" : {  'user_id':'1', "conversation_id" : "session01" }}  # 成功
-)
-print(message2)
-print(store)
-'''
-{ ('1', 'session01'): InMemoryChatMessageHistory(
-                                                messages=[ HumanMessage(content='正弦函数是什么意思', additional_kwargs={}, response_metadata={}), 
-                                                AIMessage(content='正弦函数是一种数学函数，描述一个角度与直角三角形对边长度与斜边长度比例的关系。', additional_kwargs={}, response_metadata={}), 
-                                                HumanMessage(content='先输出上一次回答的内容，然后根据上一次的回答写诗', additional_kwargs={}, response_metadata={}), 
-                                                AIMessage(content='正弦函数是一种数学函数，描述一个角度与直角三角形对边长度与斜边长度比例的关系。\n\n正弦波荡，角度翩翩，\n三角函数，斜边比例间。', additional_kwargs={}, response_metadata={})
-                                                    ]
-                                                )
-                                            }
-'''   # InMemoryChatMessageHistory继承BaseChatMessageHistory
+# # 创建一个带有历史会话记录的Runnable, 我们指定了 input_messages_key（要作为最新输入消息处理的键）和 history_messages_key（要添加历史消息的键）
+# # with_message_history = RunnableWithMessageHistory(
+# #     chain,
+# #     get_session_history,
+# #     input_messages_key='input',
+# #     history_messages_key='history'
+# # )
+# # 调用带有历史会话记录的Runnable来执行任务 ， 其中我们需要传递本次会话需要的session_id值
+# message1 = with_message_history.invoke(
+#     input={"ability":"数学",'language':'中文',"input":"正弦函数是什么意思"},
+#     config={"configurable" : { 'user_id':'1',"conversation_id" : "session01" }}
+# )
+# print(message1)
+# message2 = with_message_history.invoke(
+#     input={"ability":"语文",'language':'中文', "input":"先输出上一次回答的内容，然后根据上一次的回答写诗"},
+#     config={"configurable" : {  'user_id':'1', "conversation_id" : "session01" }}  # 成功
+# )
+# print(message2)
+# print(store)
+# '''
+# { ('1', 'session01'): InMemoryChatMessageHistory(
+#                                                 messages=[ HumanMessage(content='正弦函数是什么意思', additional_kwargs={}, response_metadata={}),
+#                                                 AIMessage(content='正弦函数是一种数学函数，描述一个角度与直角三角形对边长度与斜边长度比例的关系。', additional_kwargs={}, response_metadata={}),
+#                                                 HumanMessage(content='先输出上一次回答的内容，然后根据上一次的回答写诗', additional_kwargs={}, response_metadata={}),
+#                                                 AIMessage(content='正弦函数是一种数学函数，描述一个角度与直角三角形对边长度与斜边长度比例的关系。\n\n正弦波荡，角度翩翩，\n三角函数，斜边比例间。', additional_kwargs={}, response_metadata={})
+#                                                     ]
+#                                                 )
+#                                             }
+# '''   # InMemoryChatMessageHistory继承BaseChatMessageHistory
 
 
 # message3 = with_message_history.invoke(
@@ -190,4 +189,3 @@ print(store)
 #     },
 #     config={'configurable': {'session_id': '001'}})
 # print(response2)
-

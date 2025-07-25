@@ -40,7 +40,7 @@ def select_best_resolution(original_size: tuple, possible_resolutions: list) -> 
         wasted_resolution = (width * height) - effective_resolution
 
         if effective_resolution > max_effective_resolution or (
-            effective_resolution == max_effective_resolution and wasted_resolution < min_wasted_resolution
+                effective_resolution == max_effective_resolution and wasted_resolution < min_wasted_resolution
         ):
             max_effective_resolution = effective_resolution
             min_wasted_resolution = wasted_resolution
@@ -147,7 +147,8 @@ def process_anyres_image(image, processor, grid_pinpoints):
     image_original_resize = image.resize((processor.crop_size["height"], processor.crop_size["height"]))
 
     image_patches = [image_original_resize] + patches
-    image_patches = [processor.preprocess(image_patch, return_tensors="pt")["pixel_values"][0] for image_patch in image_patches]
+    image_patches = [processor.preprocess(image_patch, return_tensors="pt")["pixel_values"][0] for image_patch in
+                     image_patches]
     return torch.stack(image_patches, dim=0)
 
 
@@ -174,17 +175,17 @@ class Mineru2ImageProcessor(BaseImageProcessor):
     model_input_names = ["pixel_values"]
 
     def __init__(
-        self,
-        image_mean=(0.5, 0.5, 0.5),
-        image_std=(0.5, 0.5, 0.5),
-        size=(384, 384),
-        crop_size: Optional[Dict[str, int]] = None,
-        resample=PILImageResampling.BICUBIC,
-        rescale_factor=1 / 255,
-        data_format=ChannelDimension.FIRST,
-        image_aspect_ratio: Optional[str] = None,
-        image_grid_pinpoints: Optional[list] = None,
-        **kwargs,
+            self,
+            image_mean=(0.5, 0.5, 0.5),
+            image_std=(0.5, 0.5, 0.5),
+            size=(384, 384),
+            crop_size: Optional[Dict[str, int]] = None,
+            resample=PILImageResampling.BICUBIC,
+            rescale_factor=1 / 255,
+            data_format=ChannelDimension.FIRST,
+            image_aspect_ratio: Optional[str] = None,
+            image_grid_pinpoints: Optional[list] = None,
+            **kwargs,
     ) -> None:
         super().__init__(**kwargs)
 
@@ -251,10 +252,10 @@ class Mineru2ImageProcessor(BaseImageProcessor):
         return {"pixel_values": pixel_values, "image_sizes": image_sizes}
 
     def preprocess(
-        self,
-        images,
-        return_tensors: Optional[Union[str, TensorType]] = None,
-        **kwargs,
+            self,
+            images,
+            return_tensors: Optional[Union[str, TensorType]] = None,
+            **kwargs,
     ):
         if self.image_aspect_ratio is None or self.in_e2e_processing:
             data = self._preprocess(images)

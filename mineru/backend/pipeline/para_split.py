@@ -3,7 +3,6 @@ from loguru import logger
 from mineru.utils.enum_class import ContentType, BlockType, SplitFlag
 from mineru.utils.language import detect_lang
 
-
 LINE_STOP_FLAG = ('.', '!', '?', '。', '！', '？', ')', '）', '"', '”', ':', '：', ';', '；')
 LIST_END_FLAG = ('.', '。', ';', '；')
 
@@ -85,9 +84,9 @@ def __is_list_or_index_block(block):
 
         # 如果首行左边不顶格而右边顶格,末行左边顶格而右边不顶格 （第一行可能可以右边不顶格）
         if (
-            first_line['bbox'][0] - block['bbox_fs'][0] > line_height / 2
-            and abs(last_line['bbox'][0] - block['bbox_fs'][0]) < line_height / 2
-            and block['bbox_fs'][2] - last_line['bbox'][2] > line_height
+                first_line['bbox'][0] - block['bbox_fs'][0] > line_height / 2
+                and abs(last_line['bbox'][0] - block['bbox_fs'][0]) < line_height / 2
+                and block['bbox_fs'][2] - last_line['bbox'][2] > line_height
         ):
             multiple_para_flag = True
 
@@ -111,8 +110,8 @@ def __is_list_or_index_block(block):
             line_mid_x = (line['bbox'][0] + line['bbox'][2]) / 2
             block_mid_x = (block['bbox_fs'][0] + block['bbox_fs'][2]) / 2
             if (
-                line['bbox'][0] - block['bbox_fs'][0] > 0.7 * line_height
-                and block['bbox_fs'][2] - line['bbox'][2] > 0.7 * line_height
+                    line['bbox'][0] - block['bbox_fs'][0] > 0.7 * line_height
+                    and block['bbox_fs'][2] - line['bbox'][2] > 0.7 * line_height
             ):
                 external_sides_not_close_num += 1
             if abs(line_mid_x - block_mid_x) < line_height / 2:
@@ -160,8 +159,8 @@ def __is_list_or_index_block(block):
                         num_end_count += 1
 
             if (
-                num_start_count / len(lines_text_list) >= 0.8
-                or num_end_count / len(lines_text_list) >= 0.8
+                    num_start_count / len(lines_text_list) >= 0.8
+                    or num_end_count / len(lines_text_list) >= 0.8
             ):
                 line_num_flag = True
             if flag_end_count / len(lines_text_list) >= 0.8:
@@ -169,8 +168,8 @@ def __is_list_or_index_block(block):
 
         # 有的目录右侧不贴边, 目前认为左边或者右边有一边全贴边，且符合数字规则极为index
         if (
-            left_close_num / len(block['lines']) >= 0.8
-            or right_close_num / len(block['lines']) >= 0.8
+                left_close_num / len(block['lines']) >= 0.8
+                or right_close_num / len(block['lines']) >= 0.8
         ) and line_num_flag:
             for line in block['lines']:
                 line[ListLineTag.IS_LIST_START_LINE] = True
@@ -179,20 +178,20 @@ def __is_list_or_index_block(block):
         # 全部line都居中的特殊list识别，每行都需要换行，特征是多行，且大多数行都前后not_close,每line中点x坐标接近
         # 补充条件block的长宽比有要求
         elif (
-            external_sides_not_close_num >= 2
-            and center_close_num == len(block['lines'])
-            and external_sides_not_close_num / len(block['lines']) >= 0.5
-            and block_height / block_weight > 0.4
+                external_sides_not_close_num >= 2
+                and center_close_num == len(block['lines'])
+                and external_sides_not_close_num / len(block['lines']) >= 0.5
+                and block_height / block_weight > 0.4
         ):
             for line in block['lines']:
                 line[ListLineTag.IS_LIST_START_LINE] = True
             return BlockType.LIST
 
         elif (
-            left_close_num >= 2
-            and (right_not_close_num >= 2 or line_end_flag or left_not_close_num >= 2)
-            and not multiple_para_flag
-            # and block_weight_radio > 0.27
+                left_close_num >= 2
+                and (right_not_close_num >= 2 or line_end_flag or left_not_close_num >= 2)
+                and not multiple_para_flag
+                # and block_weight_radio > 0.27
         ):
             # 处理一种特殊的没有缩进的list，所有行都贴左边，通过右边的空隙判断是否是item尾
             if left_close_num / len(block['lines']) > 0.8:
@@ -205,8 +204,8 @@ def __is_list_or_index_block(block):
                 elif line_end_flag:
                     for i, line in enumerate(block['lines']):
                         if (
-                            len(lines_text_list[i]) > 0
-                            and lines_text_list[i][-1] in LIST_END_FLAG
+                                len(lines_text_list[i]) > 0
+                                and lines_text_list[i][-1] in LIST_END_FLAG
                         ):
                             line[ListLineTag.IS_LIST_END_LINE] = True
                             if i + 1 < len(block['lines']):
@@ -222,8 +221,8 @@ def __is_list_or_index_block(block):
                             line_start_flag = False
 
                         if (
-                            abs(block['bbox_fs'][2] - line['bbox'][2])
-                            > 0.1 * block_weight
+                                abs(block['bbox_fs'][2] - line['bbox'][2])
+                                > 0.1 * block_weight
                         ):
                             line[ListLineTag.IS_LIST_END_LINE] = True
                             line_start_flag = True
@@ -268,16 +267,16 @@ def __merge_2_text_blocks(block1, block2):
                         span_start_with_num = first_span['content'][0].isdigit()
                         span_start_with_big_char = first_span['content'][0].isupper()
                         if (
-                            # 上一个block的最后一个line的右边界和block的右边界差距不超过line_height
-                            abs(block2['bbox_fs'][2] - last_line['bbox'][2]) < line_height
-                            # 上一个block的最后一个span不是以特定符号结尾
-                            and not last_span['content'].endswith(LINE_STOP_FLAG)
-                            # 两个block宽度差距超过2倍也不合并
-                            and abs(block1_weight - block2_weight) < min_block_weight
-                            # 下一个block的第一个字符是数字
-                            and not span_start_with_num
-                            # 下一个block的第一个字符是大写字母
-                            and not span_start_with_big_char
+                                # 上一个block的最后一个line的右边界和block的右边界差距不超过line_height
+                                abs(block2['bbox_fs'][2] - last_line['bbox'][2]) < line_height
+                                # 上一个block的最后一个span不是以特定符号结尾
+                                and not last_span['content'].endswith(LINE_STOP_FLAG)
+                                # 两个block宽度差距超过2倍也不合并
+                                and abs(block1_weight - block2_weight) < min_block_weight
+                                # 下一个block的第一个字符是数字
+                                and not span_start_with_num
+                                # 下一个block的第一个字符是大写字母
+                                and not span_start_with_big_char
                         ):
                             if block1['page_num'] != block2['page_num']:
                                 for line in block1['lines']:
@@ -334,17 +333,17 @@ def __para_merge_page(blocks):
                     prev_block = text_blocks_group[i - 1]
 
                     if (
-                        current_block['type'] == 'text'
-                        and prev_block['type'] == 'text'
-                        and not is_list_group
+                            current_block['type'] == 'text'
+                            and prev_block['type'] == 'text'
+                            and not is_list_group
                     ):
                         __merge_2_text_blocks(current_block, prev_block)
                     elif (
-                        current_block['type'] == BlockType.LIST
-                        and prev_block['type'] == BlockType.LIST
+                            current_block['type'] == BlockType.LIST
+                            and prev_block['type'] == BlockType.LIST
                     ) or (
-                        current_block['type'] == BlockType.INDEX
-                        and prev_block['type'] == BlockType.INDEX
+                            current_block['type'] == BlockType.INDEX
+                            and prev_block['type'] == BlockType.INDEX
                     ):
                         __merge_2_list_blocks(current_block, prev_block)
 

@@ -42,7 +42,6 @@ def prepare_env(output_dir, pdf_file_name, parse_method):
 
 
 def convert_pdf_bytes_to_bytes_by_pypdfium2(pdf_bytes, start_page_id=0, end_page_id=None):
-
     # 从字节数据加载PDF
     pdf = pdfium.PdfDocument(pdf_bytes)
 
@@ -174,7 +173,8 @@ def _process_pipeline(
         f_make_md_mode,
 ):
     """处理pipeline后端逻辑"""
-    from mineru.backend.pipeline.model_json_to_middle_json import result_to_middle_json as pipeline_result_to_middle_json
+    from mineru.backend.pipeline.model_json_to_middle_json import \
+        result_to_middle_json as pipeline_result_to_middle_json
     from mineru.backend.pipeline.pipeline_analyze import doc_analyze as pipeline_doc_analyze
 
     infer_results, all_image_lists, all_pdf_docs, lang_list, ocr_enabled_list = (
@@ -388,16 +388,15 @@ async def aio_do_parse(
         )
 
 
-
 if __name__ == "__main__":
     # pdf_path = "../../demo/pdfs/demo3.pdf"
     pdf_path = "C:/Users/zhaoxiaomeng/Downloads/4546d0e2-ba60-40a5-a17e-b68555cec741.pdf"
 
     try:
-       do_parse("./output", [Path(pdf_path).stem], [read_fn(Path(pdf_path))],["ch"],
-                end_page_id=10,
-                backend='vlm-huggingface'
-                # backend = 'pipeline'
-                )
+        do_parse("./output", [Path(pdf_path).stem], [read_fn(Path(pdf_path))], ["ch"],
+                 end_page_id=10,
+                 backend='vlm-huggingface'
+                 # backend = 'pipeline'
+                 )
     except Exception as e:
         logger.exception(e)

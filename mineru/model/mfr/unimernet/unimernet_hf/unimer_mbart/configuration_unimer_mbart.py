@@ -17,7 +17,6 @@
 from transformers.configuration_utils import PretrainedConfig
 from transformers.utils import logging
 
-
 logger = logging.get_logger(__name__)
 
 
@@ -104,33 +103,33 @@ class UnimerMBartConfig(PretrainedConfig):
     attribute_map = {"num_attention_heads": "encoder_attention_heads", "hidden_size": "d_model"}
 
     def __init__(
-        self,
-        vocab_size=50265,
-        max_position_embeddings=1024,
-        encoder_layers=12,
-        encoder_ffn_dim=4096,
-        encoder_attention_heads=16,
-        decoder_layers=12,
-        decoder_ffn_dim=4096,
-        decoder_attention_heads=16,
-        encoder_layerdrop=0.0,
-        decoder_layerdrop=0.0,
-        use_cache=True,
-        is_encoder_decoder=True,
-        activation_function="gelu",
-        d_model=1024,
-        qk_squeeze=2,
-        dropout=0.1,
-        attention_dropout=0.0,
-        activation_dropout=0.0,
-        init_std=0.02,
-        classifier_dropout=0.0,
-        scale_embedding=False,
-        pad_token_id=1,
-        bos_token_id=0,
-        eos_token_id=2,
-        forced_eos_token_id=2,
-        **kwargs,
+            self,
+            vocab_size=50265,
+            max_position_embeddings=1024,
+            encoder_layers=12,
+            encoder_ffn_dim=4096,
+            encoder_attention_heads=16,
+            decoder_layers=12,
+            decoder_ffn_dim=4096,
+            decoder_attention_heads=16,
+            encoder_layerdrop=0.0,
+            decoder_layerdrop=0.0,
+            use_cache=True,
+            is_encoder_decoder=True,
+            activation_function="gelu",
+            d_model=1024,
+            qk_squeeze=2,
+            dropout=0.1,
+            attention_dropout=0.0,
+            activation_dropout=0.0,
+            init_std=0.02,
+            classifier_dropout=0.0,
+            scale_embedding=False,
+            pad_token_id=1,
+            bos_token_id=0,
+            eos_token_id=2,
+            forced_eos_token_id=2,
+            **kwargs,
     ):
         self.vocab_size = vocab_size
         self.max_position_embeddings = max_position_embeddings

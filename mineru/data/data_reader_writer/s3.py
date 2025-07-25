@@ -4,13 +4,13 @@ from ..utils.schemas import S3Config
 
 class S3DataReader(MultiBucketS3DataReader):
     def __init__(
-        self,
-        default_prefix_without_bucket: str,
-        bucket: str,
-        ak: str,
-        sk: str,
-        endpoint_url: str,
-        addressing_style: str = 'auto',
+            self,
+            default_prefix_without_bucket: str,
+            bucket: str,
+            ak: str,
+            sk: str,
+            endpoint_url: str,
+            addressing_style: str = 'auto',
     ):
         """s3 reader client.
 
@@ -39,13 +39,13 @@ class S3DataReader(MultiBucketS3DataReader):
 
 class S3DataWriter(MultiBucketS3DataWriter):
     def __init__(
-        self,
-        default_prefix_without_bucket: str,
-        bucket: str,
-        ak: str,
-        sk: str,
-        endpoint_url: str,
-        addressing_style: str = 'auto',
+            self,
+            default_prefix_without_bucket: str,
+            bucket: str,
+            ak: str,
+            sk: str,
+            endpoint_url: str,
+            addressing_style: str = 'auto',
     ):
         """s3 writer client.
 

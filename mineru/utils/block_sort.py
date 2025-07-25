@@ -13,7 +13,6 @@ from mineru.utils.models_download_utils import auto_download_and_get_model_root_
 
 
 def sort_blocks_by_bbox(blocks, page_w, page_h, footnote_blocks):
-
     """获取所有line并计算正文line的高度"""
     line_height = get_line_height(blocks)
 
@@ -72,7 +71,8 @@ def sort_lines_by_model(fix_blocks, page_w, page_h, line_height, footnote_blocks
         ]:
             if len(block['lines']) == 0:
                 add_lines_to_block(block)
-            elif block['type'] in [BlockType.TITLE] and len(block['lines']) == 1 and (block['bbox'][3] - block['bbox'][1]) > line_height * 2:
+            elif block['type'] in [BlockType.TITLE] and len(block['lines']) == 1 and (
+                    block['bbox'][3] - block['bbox'][1]) > line_height * 2:
                 block['real_lines'] = copy.deepcopy(block['lines'])
                 add_lines_to_block(block)
             else:
@@ -122,7 +122,7 @@ def sort_lines_by_model(fix_blocks, page_w, page_h, line_height, footnote_blocks
         right = round(right * x_scale)
         bottom = round(bottom * y_scale)
         assert (
-            1000 >= right >= left >= 0 and 1000 >= bottom >= top >= 0
+                1000 >= right >= left >= 0 and 1000 >= bottom >= top >= 0
         ), f'Invalid box. right: {right}, left: {left}, bottom: {bottom}, top: {top}'  # noqa: E126, E121
         boxes.append([left, top, right, bottom])
     model_manager = ModelSingleton()
@@ -144,7 +144,7 @@ def insert_lines_into_block(block_bbox, line_height, page_w, page_h):
     # 如果block高度小于n行正文，则直接返回block的bbox
     if line_height * 2 < block_height:
         if (
-            block_height > page_h * 0.25 and page_w * 0.5 > block_weight > page_w * 0.25
+                block_height > page_h * 0.25 and page_w * 0.5 > block_weight > page_w * 0.25
         ):  # 可能是双列结构，可以切细点
             lines = int(block_height / line_height)
         else:
@@ -188,7 +188,8 @@ def model_init(model_name: str):
     device = torch.device(device_name)
     if model_name == 'layoutreader':
         # 检测modelscope的缓存目录是否存在
-        layoutreader_model_dir = os.path.join(auto_download_and_get_model_root_path(ModelPath.layout_reader), ModelPath.layout_reader)
+        layoutreader_model_dir = os.path.join(auto_download_and_get_model_root_path(ModelPath.layout_reader),
+                                              ModelPath.layout_reader)
         if os.path.exists(layoutreader_model_dir):
             model = LayoutLMv3ForTokenClassification.from_pretrained(
                 layoutreader_model_dir
@@ -239,7 +240,6 @@ def do_predict(boxes: List[List[int]], model) -> List[int]:
 
 
 def cal_block_index(fix_blocks, sorted_bboxes):
-
     if sorted_bboxes is not None:
         # 使用layoutreader排序
         for block in fix_blocks:
@@ -254,7 +254,8 @@ def cal_block_index(fix_blocks, sorted_bboxes):
                 block['index'] = median_value
 
             # 删除图表body block中的虚拟line信息, 并用real_lines信息回填
-            if block['type'] in [BlockType.IMAGE_BODY, BlockType.TABLE_BODY, BlockType.TITLE, BlockType.INTERLINE_EQUATION]:
+            if block['type'] in [BlockType.IMAGE_BODY, BlockType.TABLE_BODY, BlockType.TITLE,
+                                 BlockType.INTERLINE_EQUATION]:
                 if 'real_lines' in block:
                     block['virtual_lines'] = copy.deepcopy(block['lines'])
                     block['lines'] = copy.deepcopy(block['real_lines'])
@@ -268,7 +269,8 @@ def cal_block_index(fix_blocks, sorted_bboxes):
             block_bboxes.append(block['bbox'])
 
             # 删除图表body block中的虚拟line信息, 并用real_lines信息回填
-            if block['type'] in [BlockType.IMAGE_BODY, BlockType.TABLE_BODY, BlockType.TITLE, BlockType.INTERLINE_EQUATION]:
+            if block['type'] in [BlockType.IMAGE_BODY, BlockType.TABLE_BODY, BlockType.TITLE,
+                                 BlockType.INTERLINE_EQUATION]:
                 if 'real_lines' in block:
                     block['virtual_lines'] = copy.deepcopy(block['lines'])
                     block['lines'] = copy.deepcopy(block['real_lines'])

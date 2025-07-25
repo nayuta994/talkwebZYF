@@ -18,7 +18,6 @@ def remove_invalid_surrogates(text):
 
 
 def detect_lang(text: str) -> str:
-
     if len(text) == 0:
         return ""
 

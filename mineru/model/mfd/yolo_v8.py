@@ -7,12 +7,12 @@ from PIL import Image
 
 class YOLOv8MFDModel:
     def __init__(
-        self,
-        weight: str,
-        device: str = "cpu",
-        imgsz: int = 1888,
-        conf: float = 0.25,
-        iou: float = 0.45,
+            self,
+            weight: str,
+            device: str = "cpu",
+            imgsz: int = 1888,
+            conf: float = 0.25,
+            iou: float = 0.45,
     ):
         self.model = YOLO(weight).to(device)
         self.device = device
@@ -21,9 +21,9 @@ class YOLOv8MFDModel:
         self.iou = iou
 
     def _run_predict(
-        self,
-        inputs: Union[np.ndarray, Image.Image, List],
-        is_batch: bool = False
+            self,
+            inputs: Union[np.ndarray, Image.Image, List],
+            is_batch: bool = False
     ) -> List:
         preds = self.model.predict(
             inputs,
@@ -39,9 +39,9 @@ class YOLOv8MFDModel:
         return self._run_predict(image)
 
     def batch_predict(
-        self,
-        images: List[Union[np.ndarray, Image.Image]],
-        batch_size: int = 4
+            self,
+            images: List[Union[np.ndarray, Image.Image]],
+            batch_size: int = 4
     ) -> List:
         results = []
         with tqdm(total=len(images), desc="MFD Predict") as pbar:

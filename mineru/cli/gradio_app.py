@@ -94,10 +94,12 @@ def replace_image_with_base64(markdown_text, image_dir_path):
     return re.sub(pattern, replace, markdown_text)
 
 
-async def to_markdown(file_path, end_pages=10, is_ocr=False, formula_enable=True, table_enable=True, language="ch", backend="pipeline", url=None):
+async def to_markdown(file_path, end_pages=10, is_ocr=False, formula_enable=True, table_enable=True, language="ch",
+                      backend="pipeline", url=None):
     file_path = to_pdf(file_path)
     # 获取识别的md文件以及压缩包文件路径
-    local_md_dir, file_name = await parse_pdf(file_path, './output', end_pages - 1, is_ocr, formula_enable, table_enable, language, backend, url)
+    local_md_dir, file_name = await parse_pdf(file_path, './output', end_pages - 1, is_ocr, formula_enable,
+                                              table_enable, language, backend, url)
     archive_zip_path = os.path.join('./output', str_sha256(local_md_dir) + '.zip')
     zip_archive_success = compress_directory_to_zip(local_md_dir, archive_zip_path)
     if zip_archive_success == 0:
@@ -125,22 +127,21 @@ header_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'resource
 with open(header_path, 'r') as header_file:
     header = header_file.read()
 
-
 latin_lang = [
-        'af', 'az', 'bs', 'cs', 'cy', 'da', 'de', 'es', 'et', 'fr', 'ga', 'hr',  # noqa: E126
-        'hu', 'id', 'is', 'it', 'ku', 'la', 'lt', 'lv', 'mi', 'ms', 'mt', 'nl',
-        'no', 'oc', 'pi', 'pl', 'pt', 'ro', 'rs_latin', 'sk', 'sl', 'sq', 'sv',
-        'sw', 'tl', 'tr', 'uz', 'vi', 'french', 'german'
+    'af', 'az', 'bs', 'cs', 'cy', 'da', 'de', 'es', 'et', 'fr', 'ga', 'hr',  # noqa: E126
+    'hu', 'id', 'is', 'it', 'ku', 'la', 'lt', 'lv', 'mi', 'ms', 'mt', 'nl',
+    'no', 'oc', 'pi', 'pl', 'pt', 'ro', 'rs_latin', 'sk', 'sl', 'sq', 'sv',
+    'sw', 'tl', 'tr', 'uz', 'vi', 'french', 'german'
 ]
 arabic_lang = ['ar', 'fa', 'ug', 'ur']
 cyrillic_lang = [
-        'rs_cyrillic', 'bg', 'mn', 'abq', 'ady', 'kbd', 'ava',  # noqa: E126
-        'dar', 'inh', 'che', 'lbe', 'lez', 'tab'
+    'rs_cyrillic', 'bg', 'mn', 'abq', 'ady', 'kbd', 'ava',  # noqa: E126
+    'dar', 'inh', 'che', 'lbe', 'lez', 'tab'
 ]
 east_slavic_lang = ["ru", "be", "uk"]
 devanagari_lang = [
-        'hi', 'mr', 'ne', 'bh', 'mai', 'ang', 'bho', 'mah', 'sck', 'new', 'gom',  # noqa: E126
-        'sa', 'bgc'
+    'hi', 'mr', 'ne', 'bh', 'mai', 'ang', 'bho', 'mah', 'sck', 'new', 'gom',  # noqa: E126
+    'sa', 'bgc'
 ]
 other_lang = ['ch', 'ch_lite', 'ch_server', 'en', 'korean', 'japan', 'chinese_cht', 'ta', 'te', 'ka']
 add_lang = ['latin', 'arabic', 'east_slavic', 'cyrillic', 'devanagari']
@@ -158,7 +159,6 @@ def safe_stem(file_path):
 
 
 def to_pdf(file_path):
-
     if file_path is None:
         return None
 
@@ -235,10 +235,9 @@ def update_interface(backend_choice):
     default=None,
 )
 def main(ctx,
-        example_enable, sglang_engine_enable, api_enable, max_convert_pages,
-        server_name, server_port, **kwargs
-):
-
+         example_enable, sglang_engine_enable, api_enable, max_convert_pages,
+         server_name, server_port, **kwargs
+         ):
     kwargs.update(arg_parse(ctx))
 
     if sglang_engine_enable:
@@ -264,7 +263,8 @@ def main(ctx,
                 with gr.Row():
                     input_file = gr.File(label='Please upload a PDF or image', file_types=suffixes)
                 with gr.Row():
-                    max_pages = gr.Slider(1, max_convert_pages, int(max_convert_pages/2), step=1, label='Max convert pages')
+                    max_pages = gr.Slider(1, max_convert_pages, int(max_convert_pages / 2), step=1,
+                                          label='Max convert pages')
                 with gr.Row():
                     if sglang_engine_enable:
                         drop_list = ["pipeline", "vlm-sglang-engine"]
@@ -274,7 +274,8 @@ def main(ctx,
                         preferred_option = "pipeline"
                     backend = gr.Dropdown(drop_list, label="Backend", value=preferred_option)
                 with gr.Row(visible=False) as client_options:
-                    url = gr.Textbox(label='Server URL', value='http://localhost:30000', placeholder='http://localhost:30000')
+                    url = gr.Textbox(label='Server URL', value='http://localhost:30000',
+                                     placeholder='http://localhost:30000')
                 with gr.Row(equal_height=True):
                     with gr.Column():
                         gr.Markdown("**Recognition Options:**")

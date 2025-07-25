@@ -60,10 +60,10 @@ class Mineru2ImageProcessor(BaseProcessor):
 
     @staticmethod
     def _process_single_image_task(
-        image_data: Union[str, bytes],
-        image_aspect_ratio: Optional[str] = None,
-        image_grid_pinpoints: Optional[str] = None,
-        image_processor=None,
+            image_data: Union[str, bytes],
+            image_aspect_ratio: Optional[str] = None,
+            image_grid_pinpoints: Optional[str] = None,
+            image_processor=None,
     ):
         if image_processor is None:
             assert get_global_processor is not None
@@ -86,7 +86,8 @@ class Mineru2ImageProcessor(BaseProcessor):
                         tuple(int(x * 255) for x in image_processor.image_mean),
                     )
                     pixel_values = image_processor(image.convert("RGB"))["pixel_values"][0]
-                elif image_aspect_ratio == "anyres" or (image_aspect_ratio is not None and "anyres_max" in image_aspect_ratio):
+                elif image_aspect_ratio == "anyres" or (
+                        image_aspect_ratio is not None and "anyres_max" in image_aspect_ratio):
                     pixel_values = process_anyres_image(image, image_processor, image_grid_pinpoints)
                 else:
                     pixel_values = image_processor(image)["pixel_values"][0]
@@ -125,12 +126,12 @@ class Mineru2ImageProcessor(BaseProcessor):
 
     # sglang==0.4.4.post1
     async def process_images_async(
-        self,
-        image_data: List[Union[str, bytes]],
-        input_text,
-        request_obj,
-        *args,
-        **kwargs,
+            self,
+            image_data: List[Union[str, bytes]],
+            input_text,
+            request_obj,
+            *args,
+            **kwargs,
     ):
         if not image_data:
             return None
@@ -182,12 +183,12 @@ class Mineru2ImageProcessor(BaseProcessor):
 
     # sglang==0.4.5.post3
     async def process_mm_data_async(
-        self,
-        image_data: List[Union[str, bytes]],
-        input_text,
-        request_obj,
-        *args,
-        **kwargs,
+            self,
+            image_data: List[Union[str, bytes]],
+            input_text,
+            request_obj,
+            *args,
+            **kwargs,
     ):
         from sglang.srt.managers.schedule_batch import Modality, MultimodalDataItem
 
